@@ -32,6 +32,40 @@ public class CompanyInfo implements Serializable {
     private String chairman;
     //证券事务代表
     private String securitiesRepresentative;
+    //独立董事
+    private String independentDirector;
+    //联系电话
+    private String phone;
+    //电子信箱
+    private String email;
+    //传真
+    private String fax;
+    //公司网址
+    private String companyWebsite;
+    //办公地址
+    private String officeAddress;
+    //注册地址
+    private String registeredAddress;
+    //区域
+    private String area;
+    //邮政编码
+    private String postalCode;
+    //注册资本
+    private String registeredCapital;
+    //工商登记
+    private String businessRegistration;
+    //雇员人数
+    private String numberOfEmployees;
+    //管理人员人数
+    private String numberOfManagers;
+    //律师事务所
+    private String lawFirm;
+    //会计师事务所
+    private String accountingFirm;
+    //经营范围
+    private String businessScope;
+
+
 
 
 }
