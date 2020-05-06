@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Configuration
 @EnableScheduling
-public class StockSpiderJob {
+public class StockInfoSpiderJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void fetchStockData(){

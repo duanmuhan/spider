@@ -8,6 +8,9 @@ import java.io.Serializable;
 public class StockInfo implements Serializable {
 
     private String stockId;
+
+    //交易所
+    private String exchange;
     //收益
     private String income;
     //PE
