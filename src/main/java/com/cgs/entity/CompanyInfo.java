@@ -65,7 +65,4 @@ public class CompanyInfo implements Serializable {
     //经营范围
     private String businessScope;
 
-
-
-
 }

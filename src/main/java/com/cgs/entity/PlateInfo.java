@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class PlateInfo {
+
+    private Long id;
     private String plateId;
     private String plateName;
     //更新时间

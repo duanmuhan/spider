@@ -15,7 +15,8 @@
 		<profile>
 			<id>dev</id>
 			<properties>
-
+				<stock.item.url>${stock.item.url}</stock.item.url>
+				<stock.info.url>${stock.info.url}</stock.info.url>
 			</properties>
 		</profile>
 		<profile>
