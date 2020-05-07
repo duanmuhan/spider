@@ -1,5 +1,6 @@
-package com.cgs.entity;
+package com.cgs.dto;
 
+import com.cgs.entity.StockItem;
 import lombok.Data;
 
 import java.util.Date;

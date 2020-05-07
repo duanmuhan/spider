@@ -5,20 +5,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.StockItemDAO;
 import com.cgs.entity.StockItem;
-import com.cgs.entity.StockItemSzDTO;
+import com.cgs.dto.StockItemSzDTO;
 import com.cgs.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import sun.net.www.http.HttpClient;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +40,7 @@ public class StockItemFetchService {
             return;
         }
         JSONArray jsonArray = JSON.parseArray(szRequest);
+        boolean isEmpty = true;
         for (int i=0; i<jsonArray.size(); i++){
             JSONObject object = jsonArray.getJSONObject(i);
             String data = object.getString("data");
@@ -55,7 +52,7 @@ public class StockItemFetchService {
                 continue;
             }
             List<StockItem> list = stockList.stream().map(e->e.convertToStockItem()).collect(Collectors.toList());
-            stockItemDAO.insertStockItem(list.get(0));
+            stockItemDAO.batchInsertStockItem(list);
         }
 //        String shRequest = HttpRequestUtil.getRequest(shStockListUrl);
 //        if (StringUtils.isEmpty(shRequest)){

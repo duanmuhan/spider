@@ -3,6 +3,7 @@ package com.cgs.dao;
 import com.cgs.entity.StockItem;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,4 +25,7 @@ public interface StockItemDAO {
 
     @Insert("insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values(#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}, #{item.updateTime})")
     public void insertStockItem(@Param("item") StockItem item);
+
+    @Select("select * from " + TABLE_NAME)
+    public List<StockItem> queryAllStockList();
 }
