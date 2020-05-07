@@ -1,5 +1,6 @@
 package com.cgs.dao;
 
+import com.cgs.entity.StockInfo;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.stereotype.Repository;
 
@@ -7,6 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface StockInfoDAO {
 
     @Insert("")
-    Integer addStockItem(StockItem item);
+    Integer addStockItem(StockInfo item);
 
 }

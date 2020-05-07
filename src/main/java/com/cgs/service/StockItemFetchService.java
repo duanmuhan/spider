@@ -17,11 +17,11 @@ public class StockItemFetchService {
     @Autowired
     private StockItemDAO stockDAO;
 
-    @Value("sz.stock.list.url")
+    @Value("${sz.stock.list.url}")
     private String szStockListUrl;
 
-    @Value("sh.stock.list.url")
-    private String shStockListUrl;
+//    @Value("${sh.stock.list.url}")
+//    private String shStockListUrl;
 
     public void fetchStockList() throws IOException {
         String szRequest = HttpRequestUtil.getRequest(szStockListUrl);
@@ -29,10 +29,10 @@ public class StockItemFetchService {
             return;
         }
         Map<String,Object> resultMap = JSON.parseObject(szRequest);
-        String shRequest = HttpRequestUtil.getRequest(shStockListUrl);
-        if (StringUtils.isEmpty(shRequest)){
-            return;
-        }
+//        String shRequest = HttpRequestUtil.getRequest(shStockListUrl);
+//        if (StringUtils.isEmpty(shRequest)){
+//            return;
+//        }
 
     }
 }
