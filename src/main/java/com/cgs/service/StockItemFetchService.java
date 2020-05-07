@@ -1,21 +1,29 @@
 package com.cgs.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.StockItemDAO;
+import com.cgs.entity.StockItem;
 import com.cgs.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import sun.net.www.http.HttpClient;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class StockItemFetchService {
 
     @Autowired
-    private StockItemDAO stockDAO;
+    private StockItemDAO stockItemDAO;
 
     @Value("${sz.stock.list.url}")
     private String szStockListUrl;
@@ -24,11 +32,28 @@ public class StockItemFetchService {
 //    private String shStockListUrl;
 
     public void fetchStockList() throws IOException {
-        String szRequest = HttpRequestUtil.getRequest(szStockListUrl);
+
+        int pageNo = 1;
+        szStockListUrl = szStockListUrl.replace("pageno",String.valueOf(pageNo));
+        double random = System.currentTimeMillis() / 10E13;
+        szStockListUrl = szStockListUrl.replace("randno",String.valueOf(random));
+        String szRequest = HttpRequestUtil.getRequestDirectly(szStockListUrl);
         if (StringUtils.isEmpty(szRequest)){
             return;
         }
-        Map<String,Object> resultMap = JSON.parseObject(szRequest);
+        JSONArray jsonArray = JSON.parseArray(szRequest);
+        for (int i=0; i<jsonArray.size(); i++){
+            JSONObject object = jsonArray.getJSONObject(i);
+            String data = object.getString("data");
+            if (StringUtils.isEmpty(data)){
+                continue;
+            }
+            List<StockItem> stockList = JSON.parseArray(data,StockItem.class);
+            if (CollectionUtils.isEmpty(stockList)){
+                continue;
+            }
+            stockItemDAO.batchInsertStockItem(stockList);
+        }
 //        String shRequest = HttpRequestUtil.getRequest(shStockListUrl);
 //        if (StringUtils.isEmpty(shRequest)){
 //            return;

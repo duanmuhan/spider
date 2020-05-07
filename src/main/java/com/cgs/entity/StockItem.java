@@ -9,5 +9,5 @@ public class StockItem {
     private String exchangeId;
     private String name;
     private String listingDate;
-    private String updateDate;
+    private Long updateTime;
 }
