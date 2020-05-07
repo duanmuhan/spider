@@ -10,4 +10,8 @@ public class CompanyFetchService {
     @Autowired
     private CompanyDAO companyDAO;
 
+    public void fetchCompanyInfo(){
+
+    }
+
 }

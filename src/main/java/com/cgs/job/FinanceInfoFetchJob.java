@@ -1,22 +1,20 @@
 package com.cgs.job;
 
-import com.cgs.service.StockInfoService;
+import com.cgs.service.FinanceInfoFetchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @Configuration
 @EnableScheduling
-public class StockInfoSpiderJob {
+public class FinanceInfoFetchJob {
 
     @Autowired
-    private StockInfoService stockInfoService;
+    private FinanceInfoFetchService financeInfoFetchService;
 
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void fetchStockData(){
-        System.out.println("fuckyou");
+    public void fetchFinanceInfo(){
+
     }
 }
