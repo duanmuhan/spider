@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.StockItemDAO;
 import com.cgs.entity.StockItem;
+import com.cgs.entity.StockItemSzDTO;
 import com.cgs.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class StockItemFetchService {
@@ -48,11 +50,12 @@ public class StockItemFetchService {
             if (StringUtils.isEmpty(data)){
                 continue;
             }
-            List<StockItem> stockList = JSON.parseArray(data,StockItem.class);
+            List<StockItemSzDTO> stockList = JSON.parseArray(data,StockItemSzDTO.class);
             if (CollectionUtils.isEmpty(stockList)){
                 continue;
             }
-            stockItemDAO.batchInsertStockItem(stockList);
+            List<StockItem> list = stockList.stream().map(e->e.convertToStockItem()).collect(Collectors.toList());
+            stockItemDAO.insertStockItem(list.get(0));
         }
 //        String shRequest = HttpRequestUtil.getRequest(shStockListUrl);
 //        if (StringUtils.isEmpty(shRequest)){

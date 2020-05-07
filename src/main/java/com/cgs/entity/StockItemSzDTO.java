@@ -18,9 +18,10 @@ public class StockItemSzDTO {
     public StockItem convertToStockItem(){
         StockItem stockItem = new StockItem();
         stockItem.setStockId(agdm);
+        stockItem.setExchangeId("sz");
         stockItem.setName(agjc);
         stockItem.setListingDate(agssrq);
-        stockItem.setUpdateTime(System.currentTimeMillis();
+        stockItem.setUpdateTime(System.currentTimeMillis());
         return stockItem;
     }
 }
