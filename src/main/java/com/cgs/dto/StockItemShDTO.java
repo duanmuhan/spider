@@ -25,7 +25,7 @@ public class StockItemShDTO {
         stockItem.setStockId(getCOMPANY_CODE());
         stockItem.setListingDate(getLISTING_DATE());
         stockItem.setName(getCOMPANY_ABBR());
-        stockItem.setName("sh");
+        stockItem.setExchangeId("sh");
         stockItem.setUpdateTime(System.currentTimeMillis());
         return stockItem;
     }

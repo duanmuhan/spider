@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.StockItemDAO;
+import com.cgs.dto.StockItemShDTO;
 import com.cgs.entity.StockItem;
 import com.cgs.dto.StockItemSzDTO;
 import com.cgs.util.HttpRequestUtil;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -65,12 +67,28 @@ public class StockItemFetchService {
         if (StringUtils.isEmpty(shStockListUrl) || StringUtils.isEmpty(stockReferUrl)){
             return;
         }
-        shStockListUrl = shStockListUrl.replace("pageno","1")
+        shStockListUrl = shStockListUrl.replace("pageno","1").replace("beginpage","1").replace("endpage",String.valueOf(10*pageNo + 1))
                 .replace("timestamp",String.valueOf(System.currentTimeMillis()));
-        String shRequest = HttpRequestUtil.getRequestWithRefer(shStockListUrl,stockReferUrl,stockHostUrl);
+        String shRequest = HttpRequestUtil.getRequestWithRefer(shStockListUrl,stockReferUrl);
         if (StringUtils.isEmpty(shRequest)){
             return;
         }
-
+        int firstIndex  = shRequest.indexOf('(');
+        int lastIndex = shRequest.lastIndexOf(')');
+        String str = shRequest.substring(firstIndex+1,lastIndex);
+        if (StringUtils.isEmpty(str)){
+            return;
+        }
+        JSONObject jsonObject = JSON.parseObject(str).getJSONObject("pageHelp");
+        if (ObjectUtils.isEmpty(jsonObject)){
+            return;
+        }
+        String data = jsonObject.getString("data");
+        if (StringUtils.isEmpty(data)){
+            return;
+        }
+        List<StockItemShDTO> list = JSON.parseArray(data,StockItemShDTO.class);
+        List<StockItem> shList = list.stream().map(e->e.convertToStockItem()).collect(Collectors.toList());
+        stockItemDAO.batchInsertStockItem(shList);
     }
 }

@@ -90,7 +90,6 @@ public class HttpRequestUtil {
 	}
 	
 	public static Set<String> getDomainName(String content){
-		
 		return null;
 	}
 
