@@ -43,11 +43,13 @@ public class HttpRequestUtil {
 	public static String getRequestWithRefer(String url, String refer,String hostUrl) throws IOException {
 		String pageContent = "";
 		HttpGet httpget = new HttpGet(url);
-		httpget.setHeader("Accept", "*/*");
+		httpget.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+		httpget.setHeader("Cache-Control","max-age=0");
 		httpget.setHeader("Accept-Encoding","gzip, deflate");
 		httpget.setHeader("Accept-Languange","zh-CN,zh;q=0.9");
 		httpget.setHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36");
 		httpget.setHeader("Connection","keep-alive");
+		httpget.setHeader("Cookie","sseMenuSpecial=8465; yfx_c_g_u_id_10000042=_ck18102916221510722963893155845; yfx_f_l_v_t_10000042=f_t_1540801335062__r_t_1540801335062__v_t_1540801335062__r_c_0; VISITED_MENU=%5B%228466%22%5D");
 		httpget.setHeader("Host",hostUrl);
 		httpget.setHeader("Referer",refer);
 		CloseableHttpResponse response = httpClient.execute(httpget);
