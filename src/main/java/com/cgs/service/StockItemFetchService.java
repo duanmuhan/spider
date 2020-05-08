@@ -26,8 +26,14 @@ public class StockItemFetchService {
     @Value("${sz.stock.list.url}")
     private String szStockListUrl;
 
-//    @Value("${sh.stock.list.url}")
-//    private String shStockListUrl;
+    @Value("${sh.stock.list.url}")
+    private String shStockListUrl;
+
+    @Value("${sh.stock.refer.url}")
+    private String stockReferUrl;
+
+    @Value("${sh.stock.host.url}")
+    private String stockHostUrl;
 
     public void fetchStockList() throws IOException {
 
@@ -52,12 +58,18 @@ public class StockItemFetchService {
                 continue;
             }
             List<StockItem> list = stockList.stream().map(e->e.convertToStockItem()).collect(Collectors.toList());
-            stockItemDAO.batchInsertStockItem(list);
+            //stockItemDAO.batchInsertStockItem(list);
         }
-//        String shRequest = HttpRequestUtil.getRequest(shStockListUrl);
-//        if (StringUtils.isEmpty(shRequest)){
-//            return;
-//        }
+
+        if (StringUtils.isEmpty(shStockListUrl) || StringUtils.isEmpty(stockReferUrl)){
+            return;
+        }
+        shStockListUrl = shStockListUrl.replace("pageno","1")
+                .replace("timestamp",String.valueOf(System.currentTimeMillis()));
+        String shRequest = HttpRequestUtil.getRequestWithRefer(shStockListUrl,stockReferUrl,stockHostUrl);
+        if (StringUtils.isEmpty(shRequest)){
+            return;
+        }
 
     }
 }

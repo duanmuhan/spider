@@ -39,6 +39,25 @@ public class HttpRequestUtil {
 		}
 		return pageContent;
 	}
+
+	public static String getRequestWithRefer(String url, String refer,String hostUrl) throws IOException {
+		String pageContent = "";
+		HttpGet httpget = new HttpGet(url);
+		httpget.setHeader("Accept", "*/*");
+		httpget.setHeader("Accept-Encoding","gzip, deflate");
+		httpget.setHeader("Accept-Languange","zh-CN,zh;q=0.9");
+		httpget.setHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36");
+		httpget.setHeader("Connection","keep-alive");
+		httpget.setHeader("Host",hostUrl);
+		httpget.setHeader("Referer",refer);
+		CloseableHttpResponse response = httpClient.execute(httpget);
+		HttpEntity entity = response.getEntity();
+		if(entity != null){
+			pageContent = EntityUtils.toString(entity);
+			EntityUtils.consume(entity);
+		}
+		return pageContent;
+	}
 	
 	public static String getRequestDirectly(String url) throws ClientProtocolException, IOException{
 		String pageContent = "";
