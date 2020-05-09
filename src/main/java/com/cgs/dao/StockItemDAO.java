@@ -1,6 +1,7 @@
 package com.cgs.dao;
 
 import com.cgs.entity.StockItem;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -26,6 +27,9 @@ public interface StockItemDAO {
     @Insert("insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values(#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}, #{item.updateTime})")
     public void insertStockItem(@Param("item") StockItem item);
 
-    @Select("select * from " + TABLE_NAME)
+    @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, update_date as updateDate from " + TABLE_NAME)
     public List<StockItem> queryAllStockList();
+
+    @Delete("delete  from " + TABLE_NAME)
+    public void deleteAll();
 }

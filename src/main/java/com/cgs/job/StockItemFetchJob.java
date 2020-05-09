@@ -12,14 +12,12 @@ import java.io.IOException;
 
 @Component
 @Configuration
-@EnableScheduling
 @Slf4j
 public class StockItemFetchJob {
 
     @Autowired
     private StockItemFetchService stockItemFetchService;
 
-    @Scheduled(cron = "0/5 * * * * ?")
     public void fetchStockItem(){
         try {
             stockItemFetchService.fetchStockList();
