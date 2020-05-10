@@ -10,7 +10,7 @@ public class CompanyInfoDTO {
     private String ywmc;
     private String cym;
     private String agdm;
-    private String aqjc;
+    private String agjc;
     private String bgdm;
     private String bqjc;
     private String hgdm;
@@ -42,9 +42,43 @@ public class CompanyInfoDTO {
     private String gsjj;
     private String jyfw;
 
-    private CompanyInfo convertCompanyInfo(){
+    public CompanyInfo convertCompanyInfo(){
         CompanyInfo companyInfoDTO = new CompanyInfo();
         companyInfoDTO.setStockId(getAgdm());
+        companyInfoDTO.setCompanyName(getGsmc());
+        companyInfoDTO.setCompanyEnName(getYwmc());
+        companyInfoDTO.setNameUsedBefore(getCym());
+        companyInfoDTO.setAShareCode(getAgdm());
+        companyInfoDTO.setAShareForShort(getAgjc());
+        companyInfoDTO.setBShareCode(getBgdm());
+        companyInfoDTO.setBShareForShort(getBqjc());
+        companyInfoDTO.setHShareCode(getHgdm());
+        companyInfoDTO.setHShareForShort(getHgjc());
+        companyInfoDTO.setSecuritiesClassification(getZqlb());
+        companyInfoDTO.setDongcaiIndustry(getSshy());
+        companyInfoDTO.setListedExchange(getSsjys());
+        companyInfoDTO.setIndustryOfCSRC(getSszjhhy());
+        companyInfoDTO.setPresident(getZjl());
+        companyInfoDTO.setCorporateRepresentative(getFrdb());
+        companyInfoDTO.setSecretary(getDm());
+        companyInfoDTO.setChairman(getDsz());
+        companyInfoDTO.setSecuritiesRepresentative(getZqswdb());
+        companyInfoDTO.setIndependentDirector(getDlds());
+        companyInfoDTO.setPhone(getLxdh());
+        companyInfoDTO.setEmail(getDzxx());
+        companyInfoDTO.setFax(getCz());
+        companyInfoDTO.setCompanyWebsite(getGswz());
+        companyInfoDTO.setOfficeAddress(getBgdz());
+        companyInfoDTO.setRegisteredAddress(getZcdz());
+        companyInfoDTO.setArea(getQy());
+        companyInfoDTO.setPostalCode(getYzbm());
+        companyInfoDTO.setRegisteredCapital(getZczb());
+        companyInfoDTO.setBusinessRegistration(getGsdj());
+        companyInfoDTO.setNumberOfEmployees(getGyrs());
+        companyInfoDTO.setNumberOfManagers(getGlryrs());
+        companyInfoDTO.setLawFirm(getLssws());
+        companyInfoDTO.setAccountingFirm(getKjsws());
+        companyInfoDTO.setBusinessScope(getJyfw());
         return companyInfoDTO;
     }
 

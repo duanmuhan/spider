@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.CompanyDAO;
 import com.cgs.dao.StockItemDAO;
 import com.cgs.dto.CompanyInfoDTO;
+import com.cgs.entity.CompanyInfo;
 import com.cgs.entity.StockItem;
 import com.cgs.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class CompanyFetchService {
         if (CollectionUtils.isEmpty(stockList)){
             return;
         }
-        List<CompanyInfoDTO> companyInfoDTOS = new ArrayList<>();
+        List<CompanyInfo> companyInfos = new ArrayList<>();
         List<StockItem> stockItems = stockItemDAO.queryAllStockList();
         if (CollectionUtils.isEmpty(stockItems)){
             return;
@@ -46,8 +48,12 @@ public class CompanyFetchService {
             }
             JSONObject object = JSON.parseObject(response);
             CompanyInfoDTO companyInfoDTO = JSON.parseObject(object.getString("jbzl"),CompanyInfoDTO.class);
-
+            if (ObjectUtils.isEmpty(companyInfoDTO)){
+                continue;
+            }
+            companyInfos.add(companyInfoDTO.convertCompanyInfo());
         }
+
     }
 
 }
