@@ -53,7 +53,7 @@ public class CompanyFetchService {
             }
             companyInfos.add(companyInfoDTO.convertCompanyInfo());
         }
-
+        companyDAO.batchInsertCompanyInfo(companyInfos);
     }
 
 }

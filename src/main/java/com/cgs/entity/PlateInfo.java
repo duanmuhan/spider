@@ -10,4 +10,5 @@ public class PlateInfo {
     private String plateName;
     //更新时间
     private String date;
+    private Integer type;
 }
