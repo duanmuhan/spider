@@ -19,6 +19,6 @@ public class PlateFetchJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void fetchPlateInfo() throws IOException {
-        //plateFetchService.fetchPlateInfo();
+        plateFetchService.fetchPlateInfo();
     }
 }

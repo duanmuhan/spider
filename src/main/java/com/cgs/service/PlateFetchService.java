@@ -1,5 +1,7 @@
 package com.cgs.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.PlateDAO;
 import com.cgs.entity.PlateInfo;
 import com.cgs.util.HttpRequestUtil;
@@ -7,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -34,10 +37,8 @@ public class PlateFetchService {
         if (StringUtils.isEmpty(plateConceptUrl) || StringUtils.isEmpty(plateAreaFetchUrl) || StringUtils.isEmpty(plateTradeFetchUrl)){
             return;
         }
-        String pageContentOfConcept = HttpRequestUtil.getRequest(plateConceptUrl);
-        if (StringUtils.isEmpty(pageContentOfConcept)){
-            return;
-        }
+        List<PlateInfo> conceptPlate = fetchConceptPlate();
+
         String plateAreaFetchContent = HttpRequestUtil.getRequest(plateAreaFetchUrl);
         if (StringUtils.isEmpty(plateAreaFetchContent)){
             return;
@@ -47,6 +48,42 @@ public class PlateFetchService {
             return;
         }
         List<PlateInfo> plateInfoList = new ArrayList<>();
+
         plateDAO.batchInsertPlateInfo(plateInfoList);
     }
+
+    private List<PlateInfo> fetchConceptPlate() throws IOException {
+        List<PlateInfo> plateInfos = new ArrayList<>();
+        String pageContentOfConcept = HttpRequestUtil.getRequest(plateConceptUrl);
+        if (StringUtils.isEmpty(pageContentOfConcept)){
+            return plateInfos;
+        }
+        JSONObject object = JSON.parseObject(pageContentOfConcept);
+        JSONObject data = object.getJSONObject("data");
+        if (ObjectUtils.isEmpty(data)){
+            return plateInfos;
+        }
+
+        return plateInfos;
+    }
+
+    private List<PlateInfo> fetchAreaPlate() throws IOException {
+        List<PlateInfo> plateInfos = new ArrayList<>();
+        String pageContentOfArea = HttpRequestUtil.getRequest(plateConceptUrl);
+        if (StringUtils.isEmpty(pageContentOfArea)){
+            return plateInfos;
+        }
+        JSONObject object = JSON.parseObject(pageContentOfArea);
+        JSONObject data = object.getJSONObject("data");
+        return plateInfos;
+    }
+
+    private List<PlateInfo> fetchTradePlate(){
+        List<PlateInfo> plateInfos = new ArrayList<>();
+        return plateInfos;
+    }
+
+
+
+
 }
