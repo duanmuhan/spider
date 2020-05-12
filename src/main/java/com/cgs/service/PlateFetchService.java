@@ -38,18 +38,11 @@ public class PlateFetchService {
             return;
         }
         List<PlateInfo> conceptPlate = fetchConceptPlate();
-
-        String plateAreaFetchContent = HttpRequestUtil.getRequest(plateAreaFetchUrl);
-        if (StringUtils.isEmpty(plateAreaFetchContent)){
-            return;
-        }
-        String  plateTradeFetchContent = HttpRequestUtil.getRequest(plateTradeFetchUrl);
-        if (StringUtils.isEmpty(plateTradeFetchContent)){
-            return;
-        }
-        List<PlateInfo> plateInfoList = new ArrayList<>();
-
-        plateDAO.batchInsertPlateInfo(plateInfoList);
+        List<PlateInfo> areaPlate = fetchAreaPlate();
+        List<PlateInfo> tradePlate = fetchTradePlate();
+        conceptPlate.addAll(areaPlate);
+        conceptPlate.addAll(tradePlate);
+        plateDAO.batchInsertPlateInfo(conceptPlate);
     }
 
     private List<PlateInfo> fetchConceptPlate() throws IOException {
@@ -78,8 +71,14 @@ public class PlateFetchService {
         return plateInfos;
     }
 
-    private List<PlateInfo> fetchTradePlate(){
+    private List<PlateInfo> fetchTradePlate() throws IOException {
         List<PlateInfo> plateInfos = new ArrayList<>();
+        String pageContentOfTrade = HttpRequestUtil.getRequest(plateTradeFetchUrl);
+        if (StringUtils.isEmpty(pageContentOfTrade)){
+            return plateInfos;
+        }
+        JSONObject jsonObject = JSON.parseObject(pageContentOfTrade);
+        JSONObject data = jsonObject.getJSONObject("data");
         return plateInfos;
     }
 
