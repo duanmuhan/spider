@@ -17,6 +17,5 @@ public class StockInfoSpiderJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void fetchStockData(){
-        System.out.println("fuckyou");
     }
 }

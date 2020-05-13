@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -41,9 +42,15 @@ public class PlateFetchService {
             return;
         }
         try {
+            log.info("start to fetch plate info of concept");
             List<PlateInfo> conceptPlate = fetchConceptPlate();
+            log.info("concept result is :{}",JSON.toJSON(conceptPlate));
+            log.info("start to fetch plate info of area");
             List<PlateInfo> areaPlate = fetchAreaPlate();
+            log.info("area result is :{}",JSON.toJSON(areaPlate));
+            log.info("start to fetch plate info of trade");
             List<PlateInfo> tradePlate = fetchTradePlate();
+            log.info("trade result is :{}",JSON.toJSON(tradePlate));
             conceptPlate.addAll(areaPlate);
             conceptPlate.addAll(tradePlate);
             plateDAO.batchInsertPlateInfo(conceptPlate);
@@ -58,8 +65,8 @@ public class PlateFetchService {
         while(true){
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
-            plateConceptUrl = plateConceptUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
-            String pageContentOfConcept = HttpRequestUtil.getRequestDirectly(plateConceptUrl);
+            String requestPlateConceptUrl = plateConceptUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
+            String pageContentOfConcept = HttpRequestUtil.getRequestDirectly(requestPlateConceptUrl);
             if (StringUtils.isEmpty(pageContentOfConcept)){
                 break;
             }
@@ -73,7 +80,12 @@ public class PlateFetchService {
                 break;
             }
             List<PlateInfoDTO> plateInfoDTOList = JSON.parseArray(plateData,PlateInfoDTO.class);
-            plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.CONCEPT_CONSTANT)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(plateInfoDTOList)){
+                break;
+            }
+            List<PlateInfo> plateInfoList = plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.CONCEPT_CONSTANT)).collect(Collectors.toList());
+            log.info("concept plate info list is :{}",plateInfoList);
+            plateInfos.addAll(plateInfoList);
             pageNo = pageNo + 1;
             Thread.sleep(1000 * 10);
         }
@@ -86,8 +98,8 @@ public class PlateFetchService {
         while (true){
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
-            plateAreaFetchUrl = plateAreaFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
-            String pageContentOfArea = HttpRequestUtil.getRequest(plateAreaFetchUrl);
+            String requestPlateAreaFetchUrl = plateAreaFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
+            String pageContentOfArea = HttpRequestUtil.getRequest(requestPlateAreaFetchUrl);
             if (StringUtils.isEmpty(pageContentOfArea)){
                 break;
             }
@@ -101,7 +113,12 @@ public class PlateFetchService {
                 break;
             }
             List<PlateInfoDTO> plateInfoDTOList = JSON.parseArray(plateData,PlateInfoDTO.class);
-            plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.AREA_CONSTANT)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(plateInfoDTOList)){
+                break;
+            }
+            List<PlateInfo> plateInfoList = plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.AREA_CONSTANT)).collect(Collectors.toList());
+            log.info("concept plate info list is :{}",plateInfoList);
+            plateInfos.addAll(plateInfoList);
             pageNo = pageNo + 1;
             Thread.sleep(1000 * 10);
         }
@@ -114,8 +131,8 @@ public class PlateFetchService {
         while (true){
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
-            plateTradeFetchUrl = plateTradeFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
-            String pageContentOfTrade = HttpRequestUtil.getRequest(plateTradeFetchUrl);
+            String requestPlateTradeFetchUrl = plateTradeFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
+            String pageContentOfTrade = HttpRequestUtil.getRequest(requestPlateTradeFetchUrl);
             if (StringUtils.isEmpty(pageContentOfTrade)){
                 break;
             }
@@ -129,7 +146,12 @@ public class PlateFetchService {
                 break;
             }
             List<PlateInfoDTO> plateInfoDTOList = JSON.parseArray(plateData,PlateInfoDTO.class);
-            plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.PLATE_CONSTANT)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(plateInfoDTOList)){
+                break;
+            }
+            List<PlateInfo> plateInfoList = plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.PLATE_CONSTANT)).collect(Collectors.toList());
+            log.info("concept plate info list is :{}",plateInfoList);
+            plateInfos.addAll(plateInfoList);
             pageNo = pageNo + 1;
             Thread.sleep(1000 * 10);
         }

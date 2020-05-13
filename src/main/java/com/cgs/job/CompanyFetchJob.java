@@ -19,8 +19,8 @@ public class CompanyFetchJob {
     @Autowired
     private CompanyFetchService companyFetchService;
 
-    @Scheduled(cron = "0 0 * * * ?")
     public void fetchCompanyInfo(){
+        log.info("start to fetch company info");
         try {
             companyFetchService.fetchCompanyInfo();
         } catch (Exception e) {
