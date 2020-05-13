@@ -36,16 +36,20 @@ public class PlateFetchService {
     @Value("${plate.industry.url}")
     private String plateTradeFetchUrl;
 
-    public void fetchPlateInfo() throws IOException {
+    public void fetchPlateInfo() {
         if (StringUtils.isEmpty(plateConceptUrl) || StringUtils.isEmpty(plateAreaFetchUrl) || StringUtils.isEmpty(plateTradeFetchUrl)){
             return;
         }
-        List<PlateInfo> conceptPlate = fetchConceptPlate();
-        List<PlateInfo> areaPlate = fetchAreaPlate();
-        List<PlateInfo> tradePlate = fetchTradePlate();
-        conceptPlate.addAll(areaPlate);
-        conceptPlate.addAll(tradePlate);
-        plateDAO.batchInsertPlateInfo(conceptPlate);
+        try {
+            List<PlateInfo> conceptPlate = fetchConceptPlate();
+            List<PlateInfo> areaPlate = fetchAreaPlate();
+            List<PlateInfo> tradePlate = fetchTradePlate();
+            conceptPlate.addAll(areaPlate);
+            conceptPlate.addAll(tradePlate);
+            plateDAO.batchInsertPlateInfo(conceptPlate);
+        }catch (Exception e){
+            log.error("fetch plate info exception :{}",e);
+        }
     }
 
     private List<PlateInfo> fetchConceptPlate() throws IOException, InterruptedException {
