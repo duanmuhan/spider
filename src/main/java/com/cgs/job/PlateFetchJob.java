@@ -17,8 +17,9 @@ public class PlateFetchJob {
     @Autowired
     private PlateFetchService plateFetchService;
 
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void fetchPlateInfo() throws IOException {
         plateFetchService.fetchPlateInfo();
     }
+
 }

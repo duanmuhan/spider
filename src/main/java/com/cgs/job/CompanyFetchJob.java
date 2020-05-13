@@ -19,11 +19,11 @@ public class CompanyFetchJob {
     @Autowired
     private CompanyFetchService companyFetchService;
 
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void fetchCompanyInfo(){
         try {
             companyFetchService.fetchCompanyInfo();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("exception is : {}",e);
         }
     }

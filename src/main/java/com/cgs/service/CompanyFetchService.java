@@ -29,7 +29,7 @@ public class CompanyFetchService {
     @Value("${company.survey.url}")
     private String companySurveyUrl;
 
-    public void fetchCompanyInfo() throws IOException {
+    public void fetchCompanyInfo() throws IOException, InterruptedException {
         List<StockItem> stockList = stockItemDAO.queryAllStockList();
         if (CollectionUtils.isEmpty(stockList)){
             return;
@@ -52,6 +52,7 @@ public class CompanyFetchService {
                 continue;
             }
             companyInfos.add(companyInfoDTO.convertCompanyInfo());
+            Thread.sleep(5 * 1000);
         }
         companyDAO.batchInsertCompanyInfo(companyInfos);
     }
