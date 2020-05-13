@@ -3,6 +3,7 @@ package com.cgs.dto;
 import com.cgs.entity.PlateInfo;
 import lombok.Data;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -49,7 +50,11 @@ public class PlateInfoDTO {
 
     public PlateInfo convertToPlateInfo(int type){
         PlateInfo plateInfo = new PlateInfo();
-        //plateInfo.setPlateId();
+        plateInfo.setPlateId(getF12());
+        plateInfo.setPlateName(getF14());
+        plateInfo.setType(type);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        plateInfo.setDate(sdf.format(new Date()));
         return plateInfo;
     }
 

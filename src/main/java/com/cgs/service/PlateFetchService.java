@@ -2,6 +2,7 @@ package com.cgs.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.cgs.constant.PlateType;
 import com.cgs.dao.PlateDAO;
 import com.cgs.dto.PlateInfoDTO;
 import com.cgs.entity.PlateInfo;
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 * 板块信息的获取
@@ -46,10 +48,10 @@ public class PlateFetchService {
         plateDAO.batchInsertPlateInfo(conceptPlate);
     }
 
-    private List<PlateInfo> fetchConceptPlate() throws IOException {
+    private List<PlateInfo> fetchConceptPlate() throws IOException, InterruptedException {
         List<PlateInfo> plateInfos = new ArrayList<>();
+        int pageNo = 1;
         while(true){
-            int pageNo = 1;
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
             plateConceptUrl = plateConceptUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
@@ -67,16 +69,17 @@ public class PlateFetchService {
                 break;
             }
             List<PlateInfoDTO> plateInfoDTOList = JSON.parseArray(plateData,PlateInfoDTO.class);
-            plateInfoDTOList.stream().map()
+            plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.CONCEPT_CONSTANT)).collect(Collectors.toList());
             pageNo = pageNo + 1;
+            Thread.sleep(1000 * 10);
         }
         return plateInfos;
     }
 
-    private List<PlateInfo> fetchAreaPlate() throws IOException {
+    private List<PlateInfo> fetchAreaPlate() throws IOException, InterruptedException {
         List<PlateInfo> plateInfos = new ArrayList<>();
+        int pageNo = 1;
         while (true){
-            int pageNo = 1;
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
             plateAreaFetchUrl = plateAreaFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
@@ -89,15 +92,22 @@ public class PlateFetchService {
             if (ObjectUtils.isEmpty(data)){
                 break;
             }
+            String plateData = data.getString("diff");
+            if (StringUtils.isEmpty(plateData)){
+                break;
+            }
+            List<PlateInfoDTO> plateInfoDTOList = JSON.parseArray(plateData,PlateInfoDTO.class);
+            plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.AREA_CONSTANT)).collect(Collectors.toList());
             pageNo = pageNo + 1;
+            Thread.sleep(1000 * 10);
         }
         return plateInfos;
     }
 
-    private List<PlateInfo> fetchTradePlate() throws IOException {
+    private List<PlateInfo> fetchTradePlate() throws IOException, InterruptedException {
         List<PlateInfo> plateInfos = new ArrayList<>();
+        int pageNo = 1;
         while (true){
-            int pageNo = 1;
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
             plateTradeFetchUrl = plateTradeFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
@@ -110,12 +120,16 @@ public class PlateFetchService {
             if (ObjectUtils.isEmpty(data)){
                 break;
             }
+            String plateData = data.getString("diff");
+            if (StringUtils.isEmpty(plateData)){
+                break;
+            }
+            List<PlateInfoDTO> plateInfoDTOList = JSON.parseArray(plateData,PlateInfoDTO.class);
+            plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.PLATE_CONSTANT)).collect(Collectors.toList());
             pageNo = pageNo + 1;
+            Thread.sleep(1000 * 10);
         }
         return plateInfos;
     }
-
-
-
 
 }
