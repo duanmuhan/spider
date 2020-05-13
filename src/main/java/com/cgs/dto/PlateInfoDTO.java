@@ -1,6 +1,9 @@
 package com.cgs.dto;
 
+import com.cgs.entity.PlateInfo;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 public class PlateInfoDTO {
@@ -43,5 +46,11 @@ public class PlateInfoDTO {
     private String f141;
     private String f207;
     private String f222;
+
+    public PlateInfo convertToPlateInfo(int type){
+        PlateInfo plateInfo = new PlateInfo();
+        //plateInfo.setPlateId();
+        return plateInfo;
+    }
 
 }

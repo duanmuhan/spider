@@ -3,6 +3,7 @@ package com.cgs.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.PlateDAO;
+import com.cgs.dto.PlateInfoDTO;
 import com.cgs.entity.PlateInfo;
 import com.cgs.util.HttpRequestUtil;
 import lombok.extern.log4j.Log4j2;
@@ -26,11 +27,11 @@ public class PlateFetchService {
     @Autowired
     private PlateDAO plateDAO;
 
-    @Value("plate.concept.fetch.url")
+    @Value("${plate.concept.url}")
     private String plateConceptUrl;
-    @Value("plate.concept.area.url")
+    @Value("${plate.area.url}")
     private String plateAreaFetchUrl;
-    @Value("plate.trade.fetch.url")
+    @Value("${plate.industry.url}")
     private String plateTradeFetchUrl;
 
     public void fetchPlateInfo() throws IOException {
@@ -47,38 +48,70 @@ public class PlateFetchService {
 
     private List<PlateInfo> fetchConceptPlate() throws IOException {
         List<PlateInfo> plateInfos = new ArrayList<>();
-        String pageContentOfConcept = HttpRequestUtil.getRequest(plateConceptUrl);
-        if (StringUtils.isEmpty(pageContentOfConcept)){
-            return plateInfos;
+        while(true){
+            int pageNo = 1;
+            int pageSize = 50;
+            long timestamp = System.currentTimeMillis();
+            plateConceptUrl = plateConceptUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
+            String pageContentOfConcept = HttpRequestUtil.getRequestDirectly(plateConceptUrl);
+            if (StringUtils.isEmpty(pageContentOfConcept)){
+                break;
+            }
+            JSONObject object = JSON.parseObject(pageContentOfConcept);
+            JSONObject data = object.getJSONObject("data");
+            if (ObjectUtils.isEmpty(data)){
+                break;
+            }
+            String plateData = data.getString("diff");
+            if (StringUtils.isEmpty(plateData)){
+                break;
+            }
+            List<PlateInfoDTO> plateInfoDTOList = JSON.parseArray(plateData,PlateInfoDTO.class);
+            plateInfoDTOList.stream().map()
+            pageNo = pageNo + 1;
         }
-        JSONObject object = JSON.parseObject(pageContentOfConcept);
-        JSONObject data = object.getJSONObject("data");
-        if (ObjectUtils.isEmpty(data)){
-            return plateInfos;
-        }
-
         return plateInfos;
     }
 
     private List<PlateInfo> fetchAreaPlate() throws IOException {
         List<PlateInfo> plateInfos = new ArrayList<>();
-        String pageContentOfArea = HttpRequestUtil.getRequest(plateConceptUrl);
-        if (StringUtils.isEmpty(pageContentOfArea)){
-            return plateInfos;
+        while (true){
+            int pageNo = 1;
+            int pageSize = 50;
+            long timestamp = System.currentTimeMillis();
+            plateAreaFetchUrl = plateAreaFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
+            String pageContentOfArea = HttpRequestUtil.getRequest(plateAreaFetchUrl);
+            if (StringUtils.isEmpty(pageContentOfArea)){
+                break;
+            }
+            JSONObject object = JSON.parseObject(pageContentOfArea);
+            JSONObject data = object.getJSONObject("data");
+            if (ObjectUtils.isEmpty(data)){
+                break;
+            }
+            pageNo = pageNo + 1;
         }
-        JSONObject object = JSON.parseObject(pageContentOfArea);
-        JSONObject data = object.getJSONObject("data");
         return plateInfos;
     }
 
     private List<PlateInfo> fetchTradePlate() throws IOException {
         List<PlateInfo> plateInfos = new ArrayList<>();
-        String pageContentOfTrade = HttpRequestUtil.getRequest(plateTradeFetchUrl);
-        if (StringUtils.isEmpty(pageContentOfTrade)){
-            return plateInfos;
+        while (true){
+            int pageNo = 1;
+            int pageSize = 50;
+            long timestamp = System.currentTimeMillis();
+            plateTradeFetchUrl = plateTradeFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
+            String pageContentOfTrade = HttpRequestUtil.getRequest(plateTradeFetchUrl);
+            if (StringUtils.isEmpty(pageContentOfTrade)){
+                break;
+            }
+            JSONObject jsonObject = JSON.parseObject(pageContentOfTrade);
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (ObjectUtils.isEmpty(data)){
+                break;
+            }
+            pageNo = pageNo + 1;
         }
-        JSONObject jsonObject = JSON.parseObject(pageContentOfTrade);
-        JSONObject data = jsonObject.getJSONObject("data");
         return plateInfos;
     }
 
