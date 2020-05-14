@@ -53,6 +53,7 @@ public class PlateFetchService {
             log.info("trade result is :{}",JSON.toJSON(tradePlate));
             conceptPlate.addAll(areaPlate);
             conceptPlate.addAll(tradePlate);
+            plateDAO.deleteAllPlateInfo();
             plateDAO.batchInsertPlateInfo(conceptPlate);
         }catch (Exception e){
             log.error("fetch plate info exception :{}",e);

@@ -2,10 +2,7 @@ package com.cgs.dao;
 
 import com.cgs.entity.PlateInfo;
 import com.cgs.entity.StockItem;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,5 +32,8 @@ public interface PlateDAO {
             @Result(column = "type", property = "type", javaType = Integer.class)
     })
     public List<PlateInfo> queryAllPlateInfo();
+
+    @Delete("delete from " + TABLE_NAME)
+    public void deleteAllPlateInfo();
 
 }

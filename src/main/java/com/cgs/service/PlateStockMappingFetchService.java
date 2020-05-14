@@ -45,7 +45,7 @@ public class PlateStockMappingFetchService {
             List<StockPlateInfoMapping> plateInfoMappings = new ArrayList<>();
             while (true){
                 String requestUrl = plateInfoMappingFetchUrl.replace("pageno",String.valueOf(pageNo))
-                        .replace("pagesize",String.valueOf(pageSize))
+                        .replace("pagesize",String.valueOf(pageSize)).replace("plateid",id)
                         .replace("timestamp",String.valueOf(System.currentTimeMillis()));
                 String result = HttpRequestUtil.getRequestDirectly(requestUrl);
                 if (StringUtils.isEmpty(result)){
