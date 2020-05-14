@@ -70,6 +70,7 @@ public class PlateFetchService {
             if (StringUtils.isEmpty(pageContentOfConcept)){
                 break;
             }
+            log.info("trade plate is : {}", pageContentOfConcept);
             JSONObject object = JSON.parseObject(pageContentOfConcept);
             JSONObject data = object.getJSONObject("data");
             if (ObjectUtils.isEmpty(data)){
@@ -99,10 +100,11 @@ public class PlateFetchService {
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
             String requestPlateAreaFetchUrl = plateAreaFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
-            String pageContentOfArea = HttpRequestUtil.getRequest(requestPlateAreaFetchUrl);
+            String pageContentOfArea = HttpRequestUtil.getRequestDirectly(requestPlateAreaFetchUrl);
             if (StringUtils.isEmpty(pageContentOfArea)){
                 break;
             }
+            log.info("trade plate is : {}", pageContentOfArea);
             JSONObject object = JSON.parseObject(pageContentOfArea);
             JSONObject data = object.getJSONObject("data");
             if (ObjectUtils.isEmpty(data)){
@@ -132,10 +134,11 @@ public class PlateFetchService {
             int pageSize = 50;
             long timestamp = System.currentTimeMillis();
             String requestPlateTradeFetchUrl = plateTradeFetchUrl.replace("pageno",String.valueOf(pageNo)).replace("pagesize",String.valueOf(pageSize)).replace("timestamp",String.valueOf(timestamp));
-            String pageContentOfTrade = HttpRequestUtil.getRequest(requestPlateTradeFetchUrl);
+            String pageContentOfTrade = HttpRequestUtil.getRequestDirectly(requestPlateTradeFetchUrl);
             if (StringUtils.isEmpty(pageContentOfTrade)){
                 break;
             }
+            log.info("trade plate is : {}", pageContentOfTrade);
             JSONObject jsonObject = JSON.parseObject(pageContentOfTrade);
             JSONObject data = jsonObject.getJSONObject("data");
             if (ObjectUtils.isEmpty(data)){
@@ -150,7 +153,7 @@ public class PlateFetchService {
                 break;
             }
             List<PlateInfo> plateInfoList = plateInfoDTOList.stream().map(e->e.convertToPlateInfo(PlateType.PLATE_CONSTANT)).collect(Collectors.toList());
-            log.info("concept plate info list is :{}",plateInfoList);
+            log.info("trade plate info list is :{}",plateInfoList);
             plateInfos.addAll(plateInfoList);
             pageNo = pageNo + 1;
             Thread.sleep(1000 * 10);

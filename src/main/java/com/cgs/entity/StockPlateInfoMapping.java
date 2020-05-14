@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class StockPlateInfoMapping {
+    private Long id;
     private String stockId;
     private String stockName;
     private String plateId;
