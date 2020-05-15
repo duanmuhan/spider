@@ -1,16 +1,34 @@
 package com.cgs.service;
 
+import com.alibaba.fastjson.JSON;
 import com.cgs.dao.StockInfoDAO;
+import com.cgs.dao.StockItemDAO;
+import com.cgs.dto.StockInfoDTO;
+import com.cgs.entity.StockInfo;
+import com.cgs.entity.StockItem;
+import com.cgs.util.HttpRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
+@Slf4j
 public class StockInfoService {
 
     @Autowired
     private StockInfoDAO stockInfoDAO;
+    @Autowired
+    private StockItemDAO stockItemDAO;
+
+    @Value("${stock.info.url}")
+    private String stockInfoUrl;
 
     public void fetchStockInfoService(){
-
     }
 }

@@ -74,5 +74,7 @@ public class FinanceInfo {
     //速动比率
     private String quickRatio;
     //发布日期
+    private String releaseDate;
+    //生成日期
     private String date;
 }

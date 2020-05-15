@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Configuration
 @EnableScheduling
-public class StockInfoSpiderJob {
+public class StockInfoFetchJob {
 
     @Autowired
     private StockInfoService stockInfoService;
