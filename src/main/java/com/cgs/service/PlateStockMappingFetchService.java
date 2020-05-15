@@ -8,6 +8,7 @@ import com.cgs.dao.StockPlateInfoMappingDAO;
 import com.cgs.entity.PlateInfo;
 import com.cgs.entity.StockPlateInfoMapping;
 import com.cgs.util.HttpRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PlateStockMappingFetchService {
 
     @Autowired
@@ -39,7 +41,6 @@ public class PlateStockMappingFetchService {
         if (CollectionUtils.isEmpty(plateInfos)){
             return;
         }
-        List<StockPlateInfoMapping> mappingList = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for (PlateInfo plateInfo : plateInfos){
             int pageNo = 1;
@@ -72,12 +73,12 @@ public class PlateStockMappingFetchService {
                     mapping.setStockName(array.getJSONObject(i).getString("f14"));
                     list.add(mapping);
                 }
+                log.info("stock info mapping is :{}",list);
                 plateInfoMappings.addAll(list);
                 pageNo = pageNo + 1;
                 Thread.sleep(5 * 1000);
             }
-            mappingList.addAll(plateInfoMappings);
+            stockPlateInfoMappingDAO.batchInsertStockPlateInfoMapping(plateInfoMappings);
         }
-        stockPlateInfoMappingDAO.batchInsertStockPlateInfoMapping(mappingList);
     }
 }
