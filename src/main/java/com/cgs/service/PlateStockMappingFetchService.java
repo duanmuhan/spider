@@ -16,7 +16,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,15 +39,15 @@ public class PlateStockMappingFetchService {
         if (CollectionUtils.isEmpty(plateInfos)){
             return;
         }
-        List<String> plateIds = plateInfos.stream().map(e->e.getPlateId()).collect(Collectors.toList());
         List<StockPlateInfoMapping> mappingList = new ArrayList<>();
-        for (String id : plateIds){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        for (PlateInfo plateInfo : plateInfos){
             int pageNo = 1;
             int pageSize = 100;
             List<StockPlateInfoMapping> plateInfoMappings = new ArrayList<>();
             while (true){
                 String requestUrl = plateInfoMappingFetchUrl.replace("pageno",String.valueOf(pageNo))
-                        .replace("pagesize",String.valueOf(pageSize)).replace("plateid",id)
+                        .replace("pagesize",String.valueOf(pageSize)).replace("plateid",plateInfo.getPlateId())
                         .replace("timestamp",String.valueOf(System.currentTimeMillis()));
                 String result = HttpRequestUtil.getRequestDirectly(requestUrl);
                 if (StringUtils.isEmpty(result)){
@@ -60,10 +62,16 @@ public class PlateStockMappingFetchService {
                 if (ObjectUtils.isEmpty(array) || array.size() == 0){
                     break;
                 }
-                List<StockPlateInfoMapping> list =  array.stream().map(e->{
+                List<StockPlateInfoMapping> list = new ArrayList<>();
+                for (int i=0; i<array.size(); i++){
                     StockPlateInfoMapping mapping = new StockPlateInfoMapping();
-                    return mapping;
-                }).collect(Collectors.toList());
+                    mapping.setDate(simpleDateFormat.format(new Date()));
+                    mapping.setPlateId(plateInfo.getPlateId());
+                    mapping.setPlateName(plateInfo.getPlateName());
+                    mapping.setStockId(array.getJSONObject(i).getString("f12"));
+                    mapping.setStockName(array.getJSONObject(i).getString("f14"));
+                    list.add(mapping);
+                }
                 plateInfoMappings.addAll(list);
                 pageNo = pageNo + 1;
                 Thread.sleep(5 * 1000);
