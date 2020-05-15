@@ -11,10 +11,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class FinanceInfoFetchServiceTest {
 
     @Autowired
-    private PlateFetchService plateFetchService;
+    private FinanceInfoFetchService financeInfoFetchService;
 
     @Test
     public void testFetchStockInfoService(){
-        plateFetchService.fetchPlateInfo();
+        try {
+            financeInfoFetchService.fetchFinanceInfo();
+            Thread.sleep(100 * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

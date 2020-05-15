@@ -21,8 +21,11 @@ public interface FinanceInfoDAO {
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + "values " +
             "<foreach collection='list' index='index' item='item' separator=','>" +
-            "(#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}, #{item.updateTime},#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}," +
-            " #{item.updateTime}, #{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}, #{item.updateTime}, #{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}, #{item.updateTime})" +
+            "(#{item.stockId}, #{item.basicEarningsPerCommonShare}, #{item.deductionOfNonEPS}, #{item.dilutedEPS}, #{item.netAssetValuePerShare},#{item.perShareReserve}, #{item.UDPPS}, #{item.operatingCashFlowPerShare}, " +
+            " #{item.grossRevenue}, #{item.grossProfit}, #{item.attributableNetProfit}, #{item.deductNonNetProfit}, #{item.yearOnYearGrowthOfTotalOperatingRevenue}, #{item.attributableNetProfitIncreasedYearOnYear}, #{item.deductionOfNonNetProfitIncreasedYearOnYear}, #{item.attributableNetProfitIncreasesOnARollingBasis}," +
+            " #{item.deductionOfNonNetProfit}, #{item.weightedReturnOnEquity}, #{item.dilutedReturnOnEquity}, " +
+            " #{item.dilutedReturnOnTotalAssets}, #{item.rateOfGrossProfit}, #{item.rateOfMargin}, #{item.netMargin}, #{item.ETR}, #{item.itemsReceivedInAdvance}, #{item.cashFlowFromSales}, #{item.operationCashFlow}, #{item.totalAssetsTurnover}, #{item.daysSalesOutstanding}, #{item.daysInInventory}, #{item.DEBT}, " +
+            " #{item.accruedLiabilities}, #{item.currentRatio}, #{item.quickRatio}, #{item.releaseDate}, #{item.date})" +
             "</foreach>"+
             "</script>"}
     )
