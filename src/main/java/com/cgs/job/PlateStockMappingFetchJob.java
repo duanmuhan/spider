@@ -17,7 +17,6 @@ public class PlateStockMappingFetchJob {
     @Autowired
     private PlateStockMappingFetchService plateStockMappingFetchService;
 
-    @Scheduled(cron = "0/5 * * * * ?")
     public void fetchPlateStockMapping(){
         log.info("start to execute fetchPlateStockMapping");
         try {

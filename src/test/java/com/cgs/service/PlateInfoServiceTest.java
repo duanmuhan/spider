@@ -1,6 +1,5 @@
 package com.cgs.service;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +8,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PlateStockMappingTest {
+public class PlateInfoServiceTest {
 
     @Autowired
-    private PlateStockMappingFetchService plateStockMappingFetchService;
+    private PlateFetchService plateFetchService;
 
     @Test
-    public void testPlateStockMapping(){
+    public void testFetchPlateInfo(){
         try {
-            plateStockMappingFetchService.fetchPlatStockMapping();
+            plateFetchService.fetchPlateInfo();
             Thread.sleep(1000 * 1000);
-        }catch (Exception e){
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

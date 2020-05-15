@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -17,6 +18,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+@Slf4j
 public class HttpRequestUtil {
 	
 	static CloseableHttpClient  httpClient =  HttpClients.createDefault();;
@@ -62,15 +64,20 @@ public class HttpRequestUtil {
 		return pageContent;
 	}
 	
-	public static String getRequestDirectly(String url) throws ClientProtocolException, IOException{
+	public static String getRequestDirectly(String url){
 		String pageContent = "";
 		HttpGet httpget = new HttpGet(url);
-		CloseableHttpResponse response = httpClient.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		if(entity != null){
-			pageContent = EntityUtils.toString(entity);
-			EntityUtils.consume(entity);
+		try {
+			CloseableHttpResponse response = httpClient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			if(entity != null){
+				pageContent = EntityUtils.toString(entity);
+				EntityUtils.consume(entity);
+			}
+		}catch (Exception e){
+			log.error("request url exception, url is " + url, e);
 		}
+
 		return pageContent;
 	}
 	

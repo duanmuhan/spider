@@ -53,7 +53,7 @@ public class PlateInfoDTO {
         plateInfo.setPlateId(getF12());
         plateInfo.setPlateName(getF14());
         plateInfo.setType(type);
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         plateInfo.setDate(sdf.format(new Date()));
         return plateInfo;
     }
