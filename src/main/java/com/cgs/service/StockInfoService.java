@@ -2,10 +2,12 @@ package com.cgs.service;
 
 import com.cgs.dao.StockInfoDAO;
 import com.cgs.dao.StockItemDAO;
+import com.cgs.entity.StockItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +21,11 @@ public class StockInfoService {
     @Autowired
     private StockItemDAO stockItemDAO;
 
-    @Value("${stock.info.url}")
-    private String stockInfoUrl;
-
     public void fetchStockInfoService(){
+        List<StockItem> list = stockItemDAO.queryAllStockList();
+        if (CollectionUtils.isEmpty(list)){
+            return;
+        }
+
     }
 }

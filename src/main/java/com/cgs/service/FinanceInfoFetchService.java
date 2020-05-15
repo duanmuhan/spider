@@ -26,8 +26,9 @@ public class FinanceInfoFetchService {
     @Autowired
     private StockItemDAO stockItemDAO;
 
-    @Value("")
+    @Value("${finance.info.url}")
     private String financeFetchUrl;
+
 
     public void fetchFinanceInfo(){
         List<StockItem> stockItems = stockItemDAO.queryAllStockList();
@@ -48,6 +49,6 @@ public class FinanceInfoFetchService {
             List<FinanceInfo> infos = dtoList.stream().map(e-> e.convertToStockInfo(item.getStockId())).collect(Collectors.toList());
             infoList.addAll(infos);
         }
-        //financeInfoDAO.ba
+        financeInfoDAO.batchInsertFinanceInfo(infoList);
     }
 }

@@ -17,5 +17,6 @@ public class StockInfoFetchJob {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void fetchStockData(){
+
     }
 }
