@@ -2,6 +2,7 @@ package com.cgs.dao;
 
 import com.cgs.entity.FinanceInfo;
 import com.cgs.entity.StockItem;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.stereotype.Repository;
 
@@ -30,4 +31,7 @@ public interface FinanceInfoDAO {
             "</script>"}
     )
     public void batchInsertFinanceInfo(List<FinanceInfo> list);
+
+    @Delete(" delete from " + TABLE_NAME)
+    public void clearFinanceInfo();
 }

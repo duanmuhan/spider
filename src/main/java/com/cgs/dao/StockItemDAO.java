@@ -27,7 +27,7 @@ public interface StockItemDAO {
     @Insert("insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values(#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}, #{item.updateTime})")
     public void insertStockItem(@Param("item") StockItem item);
 
-    @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, update_date as updateDate from " + TABLE_NAME)
+    @Select("select stock_id as stockId, listing_date as listingDate, exchange_id as exchangeId, name as name, update_date as updateDate from " + TABLE_NAME)
     public List<StockItem> queryAllStockList();
 
     @Delete("delete  from " + TABLE_NAME)
