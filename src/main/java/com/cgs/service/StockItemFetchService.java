@@ -8,6 +8,7 @@ import com.cgs.dto.StockItemShDTO;
 import com.cgs.entity.StockItem;
 import com.cgs.dto.StockItemSzDTO;
 import com.cgs.util.HttpRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StockItemFetchService {
 
     @Autowired
@@ -78,6 +80,7 @@ public class StockItemFetchService {
                 break;
             }
             pageNo ++;
+            log.info("szPageNo is :{}", pageNo);
             Thread.sleep(1000 * 10);
         }
         return stockItemList;
@@ -89,32 +92,29 @@ public class StockItemFetchService {
         }
         List<StockItem> resultList = new ArrayList<>();
         int pageNo = 1;
-        boolean isEmpty = false;
-        while (!isEmpty){
-            shStockListUrl = shStockListUrl.replace("pageno",String.valueOf(pageNo)).replace("beginpage",String.valueOf(pageNo)).replace("endpage",String.valueOf(10*pageNo + 1))
+        while (true){
+            String requestUrl = shStockListUrl.replace("pageno",String.valueOf(pageNo)).replace("beginpage",String.valueOf(pageNo)).replace("endpage",String.valueOf(10*pageNo + 1))
                     .replace("timestamp",String.valueOf(System.currentTimeMillis()));
-            String shRequest = HttpRequestUtil.getRequestWithRefer(shStockListUrl,stockReferUrl);
+            String shRequest = HttpRequestUtil.getRequestWithRefer(requestUrl,stockReferUrl);
             if (StringUtils.isEmpty(shRequest)){
-                isEmpty = true;
+                break;
             }
-            int firstIndex  = shRequest.indexOf('(');
-            int lastIndex = shRequest.lastIndexOf(')');
-            String str = shRequest.substring(firstIndex+1,lastIndex);
-            if (StringUtils.isEmpty(str)){
-                isEmpty=true;
-            }
-            JSONObject jsonObject = JSON.parseObject(str).getJSONObject("pageHelp");
+            JSONObject jsonObject = JSON.parseObject(shRequest).getJSONObject("pageHelp");
             if (ObjectUtils.isEmpty(jsonObject)){
-                isEmpty = true;
+                break;
             }
             String data = jsonObject.getString("data");
             if (StringUtils.isEmpty(data)){
-                isEmpty = true;
+                break;
             }
             List<StockItemShDTO> list = JSON.parseArray(data,StockItemShDTO.class);
+            if (CollectionUtils.isEmpty(list)){
+                break;
+            }
             List<StockItem> shList = list.stream().map(e->e.convertToStockItem()).collect(Collectors.toList());
             resultList.addAll(shList);
             pageNo ++;
+            log.info("shPageNo is :{}", pageNo);
             Thread.sleep(1000 * 10);
         }
         return resultList;

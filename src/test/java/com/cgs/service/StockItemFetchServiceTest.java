@@ -24,4 +24,9 @@ public class StockItemFetchServiceTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testFetchShExchangeStockList(){
+
+    }
 }
