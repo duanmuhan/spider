@@ -33,7 +33,7 @@ public class KItemFetchService {
     @Value("${kitem.sh.url}")
     private String shRequestUrl;
 
-    public void fetchKItem(){
+    public void fetchKItem() throws InterruptedException {
         List<StockItem> list = stockItemDAO.queryAllStockList();
         if (CollectionUtils.isEmpty(list)){
             return;
@@ -45,7 +45,7 @@ public class KItemFetchService {
         List<KItem> kItems = new ArrayList<>();
         List<StockItem> szStockList = stockMap.get("sz");
         List<StockItem> shStockList = stockMap.get("sh");
-        if (!CollectionUtils.isEmpty(szStockList)){
+        if (false){
             for (StockItem item : szStockList){
                 double random = System.currentTimeMillis() / 10E13;
                 String requestUrl = szRequestUrl.replace("randomno",String.valueOf(random))
@@ -74,6 +74,7 @@ public class KItemFetchService {
                 picUpDataList.forEach(e->{
                     KItem kItem = new KItem();
                     List<String> itemList = JSON.parseArray(e,String.class);
+                    kItem.setStockId(item.getStockId());
                     kItem.setDate(itemList.get(0).replace("-",""));
                     kItem.setOpenPrice(Double.valueOf(itemList.get(1)));
                     kItem.setClosePrice(Double.valueOf(itemList.get(2)));
@@ -83,6 +84,7 @@ public class KItemFetchService {
                     kItem.setDealCash(Double.valueOf(itemList.get(8)));
                     kItems.add(kItem);
                 });
+                Thread.sleep( 5 * 1000);
             }
         }
         if (!CollectionUtils.isEmpty(shStockList)){
