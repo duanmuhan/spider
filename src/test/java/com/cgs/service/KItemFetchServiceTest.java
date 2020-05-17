@@ -16,6 +16,10 @@ public class KItemFetchServiceTest {
 
     @Test
     public void testKItemService(){
-        kItemFetchService.fetchKItem();
+        try {
+            kItemFetchService.fetchKItem();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

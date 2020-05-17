@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import sun.jvm.hotspot.debugger.DebuggerUtilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,6 +117,11 @@ public class KItemFetchService {
                     List<String> kItemList = JSON.parseArray(str,String.class);
                     KItem kItem = new KItem();
                     kItem.setDate(kItemList.get(0));
+                    kItem.setOpenPrice(Double.valueOf(kItemList.get(1)));
+                    kItem.setHigh(Double.valueOf(kItemList.get(2)));
+                    kItem.setLow(Double.valueOf(kItemList.get(3)));
+                    kItem.setClosePrice(Double.valueOf(kItemList.get(4)));
+                    kItem.setDealAmount(Long.valueOf(kItemList.get(5)));
                     kItems.add(kItem);
                 }
             }
