@@ -17,7 +17,7 @@ public class StockItemFetchServiceTest {
     private StockItemFetchService stockItemFetchService;
 
     @Test
-    public void testFetchKItem(){
+    public void testFetchStockItem(){
         try {
             stockItemFetchService.fetchStockList();
         } catch (Exception e) {

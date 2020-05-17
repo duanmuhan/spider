@@ -54,10 +54,10 @@ public class StockItemFetchService {
         List<StockItem> stockItemList = new ArrayList<>();
         while (true){
             boolean isEmpty = true;
-            szStockListUrl = szStockListUrl.replace("pageno",String.valueOf(pageNo));
+            String requestUrl = szStockListUrl.replace("pageno",String.valueOf(pageNo));
             double random = System.currentTimeMillis() / 10E13;
-            szStockListUrl = szStockListUrl.replace("randno",String.valueOf(random));
-            String szRequest = HttpRequestUtil.getRequestDirectly(szStockListUrl);
+            requestUrl = requestUrl.replace("randno",String.valueOf(random));
+            String szRequest = HttpRequestUtil.getRequestDirectly(requestUrl);
             if (StringUtils.isEmpty(szRequest)){
                 return new ArrayList<>();
             }
