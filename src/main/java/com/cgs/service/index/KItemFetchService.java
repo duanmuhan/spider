@@ -7,6 +7,7 @@ import com.cgs.dao.StockItemDAO;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.index.KItem;
 import com.cgs.util.HttpRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class KItemFetchService {
 
     @Autowired
@@ -43,16 +45,16 @@ public class KItemFetchService {
         if (ObjectUtils.isEmpty(stockMap)){
             return;
         }
-        List<KItem> kItems = new ArrayList<>();
         List<StockItem> szStockList = stockMap.get("sz");
         List<StockItem> shStockList = stockMap.get("sh");
-        if (false){
+        if (!CollectionUtils.isEmpty(szStockList)){
             for (StockItem item : szStockList){
+                List<KItem> kItems = new ArrayList<>();
                 double random = System.currentTimeMillis() / 10E13;
                 String requestUrl = szRequestUrl.replace("randomno",String.valueOf(random))
                         .replace("stockcode",item.getStockId()).replace("cyclecode",String.valueOf(32));
                 String result = HttpRequestUtil.getRequestDirectly(requestUrl);
-                if (StringUtils.isEmpty(requestUrl)){
+                if (StringUtils.isEmpty(result)){
                     continue;
                 }
                 JSONObject jsonObject = JSON.parseObject(result);
@@ -85,11 +87,14 @@ public class KItemFetchService {
                     kItem.setDealCash(Double.valueOf(itemList.get(8)));
                     kItems.add(kItem);
                 });
+                log.info("sz stock k item id is :{}",item.getStockId());
+                kItemDAO.batchInsertKItem(kItems);
                 Thread.sleep( 5 * 1000);
             }
         }
         if (!CollectionUtils.isEmpty(shStockList)){
             for (StockItem item : shStockList){
+                List<KItem> kItems = new ArrayList<>();
                 long timestamp = System.currentTimeMillis();
                 String requestUrl = shRequestUrl.replace("stock_id",item.getStockId())
                         .replace("timestamp",String.valueOf(timestamp));
@@ -122,10 +127,13 @@ public class KItemFetchService {
                     kItem.setLow(Double.valueOf(kItemList.get(3)));
                     kItem.setClosePrice(Double.valueOf(kItemList.get(4)));
                     kItem.setDealAmount(Long.valueOf(kItemList.get(5)));
+                    kItem.setStockId(item.getStockId());
                     kItems.add(kItem);
                 }
+                log.info("sh stock k item id is :{}",item.getStockId());
+                kItemDAO.batchInsertKItem(kItems);
+                Thread.sleep(1000 * 5);
             }
         }
-        kItemDAO.batchInsertKItem(kItems);
     }
 }
