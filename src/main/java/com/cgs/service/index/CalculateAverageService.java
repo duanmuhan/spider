@@ -96,5 +96,4 @@ public class CalculateAverageService {
         return itemList;
     }
 
-
 }
