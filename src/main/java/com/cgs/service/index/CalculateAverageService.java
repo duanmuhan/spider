@@ -40,8 +40,9 @@ public class CalculateAverageService {
         for (String stockId : stockIds){
             List<KItem> kItems = kItemDAO.queryKItemsbyStockId(stockId);
             List<AverageItem> fiveDayList = calculate5DayAverage(kItems);
-
+            averageItems.addAll(fiveDayList);
         }
+        averageDAO.batchInsertAverageItem(averageItems);
     }
 
     public List<AverageItem> calculateAverage(List<KItem> list, Integer day,Integer type){
