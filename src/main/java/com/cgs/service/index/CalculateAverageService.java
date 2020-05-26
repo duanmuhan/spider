@@ -7,6 +7,7 @@ import com.cgs.dao.index.AverageDAO;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.index.AverageItem;
 import com.cgs.entity.index.KItem;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CalculateAverageService {
 
     @Autowired
@@ -62,7 +64,7 @@ public class CalculateAverageService {
             }
             double averagePrice = totalPrice / day;
             AverageItem item = new AverageItem();
-            item.setAverageTye(type);
+            item.setType(type);
             item.setDate(list.get(index).getDate());
             item.setPrice(averagePrice);
             item.setStockId(list.get(index).getStockId());

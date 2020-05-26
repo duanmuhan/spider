@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface KItemDAO {
 
-    String TABLE_NAME = "k_item";
+    String TABLE_NAME = " k_item ";
 
     String COLUMNS = " stock_id, open_price, close_price, high, low, deal_amount, date ";
 

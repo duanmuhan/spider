@@ -6,6 +6,6 @@ import lombok.Data;
 public class AverageItem {
     private String stockId;
     private Double price;
-    private Integer averageTye;
+    private Integer type;
     private String date;
 }
