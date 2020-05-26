@@ -1,8 +1,7 @@
 package com.cgs.dao;
 
 import com.cgs.entity.index.KItem;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +25,18 @@ public interface KItemDAO {
     @Insert(" insert into " + TABLE_NAME + "(" + COLUMNS + ")" + "values (#{item.stockId}, #{item.openPrice}," +
             " #{item.closePrice}, #{item.high}, #{item.low}, #{item.dealAmount}, #{item.date})")
     public void insertKItem(@Param("item") KItem item);
+
+    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc" )
+    @Results( id = "resultMap",value = {
+            @Result(property = "stockId",column = "stock_id"),
+            @Result(property = "openPrice",column = "open_price"),
+            @Result(property = "closePrice",column = "close_price"),
+            @Result(property = "high",column = "high"),
+            @Result(property = "low",column = "low"),
+            @Result(property = "dealAmount",column = "deal_amount"),
+            @Result(property = "dealCash",column = "deal_cash"),
+            @Result(property = "date",column = "date")
+    })
+    public List<KItem> queryKItemsbyStockId(@Param("stockId") String stockId);
 }
+
