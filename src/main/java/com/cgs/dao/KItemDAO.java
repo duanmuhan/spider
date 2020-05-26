@@ -26,7 +26,7 @@ public interface KItemDAO {
             " #{item.closePrice}, #{item.high}, #{item.low}, #{item.dealAmount}, #{item.date})")
     public void insertKItem(@Param("item") KItem item);
 
-    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date desc" )
+    @Select("select * from" + TABLE_NAME + "where stock_id = #{stockId} order by date asc" )
     @Results( id = "resultMap",value = {
             @Result(property = "stockId",column = "stock_id"),
             @Result(property = "openPrice",column = "open_price"),
