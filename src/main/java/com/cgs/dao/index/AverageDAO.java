@@ -20,4 +20,6 @@ public interface AverageDAO {
             "</script>"}
     )
     public void batchInsertAverageItem(List<AverageItem> averageItems);
+
+    public List<AverageItem> queryAverageItemByStockId(String stockId);
 }
