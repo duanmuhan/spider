@@ -2,13 +2,14 @@ package com.cgs.dao.index;
 
 import com.cgs.entity.index.AverageItem;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface AverageDAO {
-    String TABLE_NAME = "average_item";
+    String TABLE_NAME = " average_item ";
 
     String COLUMNS = " stock_id, price, type, date ";
 
@@ -21,5 +22,6 @@ public interface AverageDAO {
     )
     public void batchInsertAverageItem(List<AverageItem> averageItems);
 
+    @Select(" select * from " + TABLE_NAME + "where stock_id=#{stockId}" )
     public List<AverageItem> queryAverageItemByStockId(String stockId);
 }

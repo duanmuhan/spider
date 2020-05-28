@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class KDJItem {
     private String stockId;
-    private Double kValue;
-    private Double dValue;
-    private Double jValue;
+    private Integer kValue;
+    private Integer dValue;
+    private Integer jValue;
     private String date;
 }
