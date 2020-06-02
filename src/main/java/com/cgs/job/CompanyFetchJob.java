@@ -8,8 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
 @Configuration
 @EnableScheduling
@@ -19,6 +17,7 @@ public class CompanyFetchJob {
     @Autowired
     private CompanyFetchService companyFetchService;
 
+    @Scheduled(cron = "0/5 * * * * ?")
     public void fetchCompanyInfo(){
         log.info("start to fetch company info");
         try {
@@ -26,5 +25,6 @@ public class CompanyFetchJob {
         } catch (Exception e) {
             log.error("exception is : {}",e);
         }
+        log.info("finished to fetch company info");
     }
 }
