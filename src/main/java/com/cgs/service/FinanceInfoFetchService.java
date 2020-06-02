@@ -5,7 +5,6 @@ import com.cgs.dao.FinanceInfoDAO;
 import com.cgs.dao.StockItemDAO;
 import com.cgs.dto.FinanceInfoDTO;
 import com.cgs.entity.FinanceInfo;
-import com.cgs.entity.StockInfo;
 import com.cgs.entity.StockItem;
 import com.cgs.util.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
