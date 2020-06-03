@@ -13,7 +13,7 @@ import java.util.List;
 public interface StockItemDAO {
 
     String TABLE_NAME = "stock_item";
-    String COLUMNS = "stock_id, exchange_id, name, listing_date, update_date";
+    String COLUMNS = "stock_id, exchange_id, name, listing_date ";
 
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + "values " +
