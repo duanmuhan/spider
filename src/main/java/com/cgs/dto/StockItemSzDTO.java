@@ -22,7 +22,6 @@ public class StockItemSzDTO {
         stockItem.setExchangeId("sz");
         stockItem.setName(agjc);
         stockItem.setListingDate(agssrq);
-        stockItem.setUpdateTime(System.currentTimeMillis());
         return stockItem;
     }
 }
