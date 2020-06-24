@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.StockItemDAO;
 import com.cgs.dto.StockItemShDTO;
-import com.cgs.entity.StockItem;
 import com.cgs.dto.StockItemSzDTO;
+import com.cgs.entity.StockItem;
 import com.cgs.util.HttpRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +46,7 @@ public class StockItemFetchService {
         List<StockItem> shExchangeStockList = fetchShExchangeStockList();
         results.addAll(szExchangeStockList);
         results.addAll(shExchangeStockList);
+        stockItemDAO.deleteAll();
         stockItemDAO.batchInsertStockItem(results);
     }
 
@@ -81,7 +80,7 @@ public class StockItemFetchService {
             }
             pageNo ++;
             log.info("szPageNo is :{}", pageNo);
-            Thread.sleep(1000 * 10);
+            Thread.sleep(1000);
         }
         return stockItemList;
     }
@@ -115,7 +114,7 @@ public class StockItemFetchService {
             resultList.addAll(shList);
             pageNo ++;
             log.info("shPageNo is :{}", pageNo);
-            Thread.sleep(1000 * 10);
+            Thread.sleep(1000);
         }
         return resultList;
     }

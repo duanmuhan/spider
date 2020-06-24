@@ -16,7 +16,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -88,7 +87,7 @@ public class KItemFetchService {
                 });
                 log.info("sz stock k item id is :{}",item.getStockId());
                 kItemDAO.batchInsertKItem(kItems);
-                Thread.sleep( 5 * 1000);
+                Thread.sleep( 1000);
             }
         }
         if (!CollectionUtils.isEmpty(shStockList)){

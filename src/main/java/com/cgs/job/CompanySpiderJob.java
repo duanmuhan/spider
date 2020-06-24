@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 public class CompanySpiderJob {
 
-    @Scheduled(cron = "0/5 * * * * ?")
     public void fetchCompanyInfo(){
 
     }
