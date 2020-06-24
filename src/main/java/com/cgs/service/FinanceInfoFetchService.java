@@ -48,6 +48,7 @@ public class FinanceInfoFetchService {
             List<FinanceInfo> infos = dtoList.stream().map(e-> e.convertToStockInfo(item.getStockId())).collect(Collectors.toList());
             infoList.addAll(infos);
         }
+        financeInfoDAO.clearFinanceInfo();
         financeInfoDAO.batchInsertFinanceInfo(infoList);
     }
 }
