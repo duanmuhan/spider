@@ -9,4 +9,6 @@ public class InstitutionalPosition {
     private String numberOfHoldingPosition;
     private String proportionOfTradableShares;
     private String proportionInTotalEquity;
+    private String releaseDate;
+    private String date;
 }

@@ -6,8 +6,6 @@ import lombok.Data;
 public class StockHolder {
 
     private String stockId;
-    //日期
-    private String releaseDate;
     //股东人数
     private String numberOfShareholders;
     //人均流通股
@@ -24,6 +22,8 @@ public class StockHolder {
     private String topTenStockHolder;
     //前十大流通股东持股合计(%)
     private String topTenStockFlowHolder;
+    //日期
+    private String releaseDate;
     private String date;
 
 }

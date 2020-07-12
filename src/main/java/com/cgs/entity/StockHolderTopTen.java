@@ -5,8 +5,7 @@ import lombok.Data;
 @Data
 public class StockHolderTopTen {
 
-    //日期
-    private String releaseDate;
+    private String stockId;
     //股东名称
     private String stockHolderName;
     //股东性质
@@ -21,6 +20,8 @@ public class StockHolderTopTen {
     private String change;
     //变动比例
     private String changeRate;
+    //日期
+    private String releaseDate;
     private String date;
 
 }
