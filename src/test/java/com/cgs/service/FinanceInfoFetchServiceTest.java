@@ -17,8 +17,7 @@ public class FinanceInfoFetchServiceTest {
     public void testFetchStockInfoService(){
         try {
             financeInfoFetchService.fetchFinanceInfo();
-            Thread.sleep(100 * 1000);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
