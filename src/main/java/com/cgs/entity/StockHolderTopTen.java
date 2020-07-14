@@ -17,7 +17,7 @@ public class StockHolderTopTen {
     //占总流通股本持股比例
     private String rate;
     //增减(股)
-    private String change;
+    private String changes;
     //变动比例
     private String changeRate;
     //日期

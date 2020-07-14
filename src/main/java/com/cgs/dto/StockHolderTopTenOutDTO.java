@@ -2,8 +2,10 @@ package com.cgs.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class StockHolderTopTenOutDTO {
     private String rq;
-    private StockHolderTopTenDTO sdgd;
+    private List<StockHolderTopTenDTO> sdgd;
 }

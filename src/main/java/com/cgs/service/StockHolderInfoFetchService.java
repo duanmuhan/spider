@@ -9,6 +9,7 @@ import com.cgs.dao.StockItemDAO;
 import com.cgs.dto.StockHolderComponentDTO;
 import com.cgs.dto.StockHolderDTO;
 import com.cgs.dto.StockHolderTopTenDTO;
+import com.cgs.dto.StockHolderTopTenOutDTO;
 import com.cgs.entity.StockHolder;
 import com.cgs.entity.StockHolderComponent;
 import com.cgs.entity.StockHolderTopTen;
@@ -74,25 +75,30 @@ public class StockHolderInfoFetchService {
                 }
                 String stockHolderTopTenStr = object.getString("sdltgd");
                 if (!StringUtils.isEmpty(stockHolderTopTenStr)){
-                    List<StockHolderTopTenDTO> tmpList = JSON.parseArray(stockHolderTopTenStr,StockHolderTopTenDTO.class);
-                    List<StockHolderTopTen> list =  tmpList.stream().map(h->{
-                        StockHolderTopTen stockHolderTopTen = new StockHolderTopTen();
-                        stockHolderTopTen.setStockId(stockId);
-                        stockHolderTopTen.setStockHolderName(h.getGdmc());
-                        stockHolderTopTen.setTypesOfStockHolders(h.getGflx());
-                        stockHolderTopTen.setTypesOfShares(h.getGflx());
-                        stockHolderTopTen.setNumbersOfShares(h.getCgs());
-                        stockHolderTopTen.setRate(h.getZltgbcgbl());
-                        stockHolderTopTen.setChange(h.getZj());
-                        stockHolderTopTen.setChangeRate(h.getBdbl());
-                        stockHolderTopTen.setReleaseDate(h.getRq());
-                        return stockHolderTopTen;
-                    }).collect(Collectors.toList());
-                    stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
+                    List<StockHolderTopTenOutDTO> outDTOList = JSON.parseArray(stockHolderTopTenStr, StockHolderTopTenOutDTO.class);
+                    for (StockHolderTopTenOutDTO dto : outDTOList){
+                        List<StockHolderTopTenDTO> dtos = dto.getSdgd();
+                        if (!CollectionUtils.isEmpty(dtos)){
+                            List<StockHolderTopTen> list =  dtos.stream().map(h->{
+                                StockHolderTopTen stockHolderTopTen = new StockHolderTopTen();
+                                stockHolderTopTen.setStockId(stockId);
+                                stockHolderTopTen.setStockHolderName(h.getGdmc());
+                                stockHolderTopTen.setTypesOfStockHolders(h.getGflx());
+                                stockHolderTopTen.setTypesOfShares(h.getGflx());
+                                stockHolderTopTen.setNumbersOfShares(h.getCgs());
+                                stockHolderTopTen.setRate(h.getZltgbcgbl());
+                                stockHolderTopTen.setChanges(h.getZj());
+                                stockHolderTopTen.setChangeRate(h.getBdbl());
+                                stockHolderTopTen.setReleaseDate(h.getRq());
+                                return stockHolderTopTen;
+                            }).collect(Collectors.toList());
+                            stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
+                        }
+                    }
                 }
                 String stockTopStr = object.getString("zlcc");
                 if (!StringUtils.isEmpty(stockTopStr)){
-                    List<StockHolderComponentDTO> tmpList = JSON.parseArray(stockHolderTopTenStr, StockHolderComponentDTO.class);
+                    List<StockHolderComponentDTO> tmpList = JSON.parseArray(stockTopStr, StockHolderComponentDTO.class);
                     List<StockHolderComponent> list = tmpList.stream().map(i->{
                         StockHolderComponent stockHolderComponent = new StockHolderComponent();
                         stockHolderComponent.setStockId(stockId);
