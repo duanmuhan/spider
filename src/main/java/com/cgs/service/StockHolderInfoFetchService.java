@@ -47,12 +47,10 @@ public class StockHolderInfoFetchService {
         if (CollectionUtils.isEmpty(stockItemList)){
             return;
         }
-        List<StockHolder> stockHolderResultList = new ArrayList<>();
-        List<StockHolderTopTen> stockHolderTopTenResultList = new ArrayList<>();
-        List<StockHolderComponent> stockHolderComponentsResultList = new ArrayList<>();
-        stockItemList.parallelStream().forEach(e->{
+        stockItemList.stream().forEach(e->{
             String stockId = e.getStockId();
             String requestUrl = stockHolderUrl.concat(e.getExchangeId().toUpperCase() + e.getStockId());
+            log.info("start to request url:{}",requestUrl);
             String result = HttpRequestUtil.getRequestDirectly(requestUrl);
             if (!StringUtils.isEmpty(result)){
                 JSONObject object = JSON.parseObject(result);
@@ -72,7 +70,7 @@ public class StockHolderInfoFetchService {
                         stockHolder.setTopTenStockFlowHolder(f.getQsdltgdcghj());
                         return stockHolder;
                     }).collect(Collectors.toList());
-                    stockHolderResultList.addAll(tmpList);
+                    stockHolderDAO.batchInsertStockHolder(tmpList);
                 }
                 String stockHolderTopTenStr = object.getString("sdltgd");
                 if (!StringUtils.isEmpty(stockHolderTopTenStr)){
@@ -90,7 +88,7 @@ public class StockHolderInfoFetchService {
                         stockHolderTopTen.setReleaseDate(h.getRq());
                         return stockHolderTopTen;
                     }).collect(Collectors.toList());
-                    stockHolderTopTenResultList.addAll(list);
+                    stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
                 }
                 String stockTopStr = object.getString("zlcc");
                 if (!StringUtils.isEmpty(stockTopStr)){
@@ -106,14 +104,16 @@ public class StockHolderInfoFetchService {
                         stockHolderComponent.setReleaseDate(e.getListingDate());
                         return stockHolderComponent;
                     }).collect(Collectors.toList());
-                    stockHolderComponentsResultList.addAll(list);
+                    stockHolderComponentDAO.batchInsertStockHolderComponent(list);
                 }
+            }
+            try {
+                Thread.sleep(2 * 1000);
+            } catch (InterruptedException ex) {
+                log.error("StockHolderInfoFetchService-fetchStockHolderInfo error:{}",e);
             }
         });
 
-        stockHolderDAO.batchInsertStockHolder(stockHolderResultList);
-        stockHolderTopTenDAO.batchInsertStockHolderTopTen(stockHolderTopTenResultList);
-        stockHolderComponentDAO.batchInsertStockHolderComponent(stockHolderComponentsResultList);
     }
 
 }

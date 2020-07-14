@@ -12,7 +12,7 @@ public interface StockHolderTopTenDAO {
     String TABLE_NAME = " stock_holder_top_ten ";
 
     String COLUMNS = " stock_id, stock_holder_name, type_of_stock_holder, type_of_share," +
-            " numbers_of_shares, rate, change, change_rate, top_ten_stock_flow_holder, release_date, date ";
+            " numbers_of_shares, rate, change, change_rate, top_ten_stock_flow_holder, release_date ";
 
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +

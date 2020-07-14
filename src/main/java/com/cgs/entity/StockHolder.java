@@ -24,6 +24,5 @@ public class StockHolder {
     private String topTenStockFlowHolder;
     //日期
     private String releaseDate;
-    private String date;
 
 }
