@@ -20,8 +20,7 @@ public interface StockHolderTopTenDAO {
             "(#{item.stockId}, #{item.stockHolderName}, #{item.typesOfStockHolders} ,  #{item.typesOfShares}" +
             ", #{item.numbersOfShares} ,  #{item.rate} " +
             ", #{item.change} ,  #{item.changeRate} " +
-            ", #{item.releaseDate} " +
-            ", #{item.date} )" +
+            ", #{item.releaseDate} )" +
             "</foreach>"+
             "</script>"})
     public void batchInsertStockHolderTopTen(List<StockHolderTopTen> list);

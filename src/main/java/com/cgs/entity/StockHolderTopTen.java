@@ -22,6 +22,5 @@ public class StockHolderTopTen {
     private String changeRate;
     //日期
     private String releaseDate;
-    private String date;
 
 }
