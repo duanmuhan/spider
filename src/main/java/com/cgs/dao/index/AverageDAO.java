@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface AverageDAO {
+
     String TABLE_NAME = " average_item ";
 
     String COLUMNS = " stock_id, price, type, date ";
