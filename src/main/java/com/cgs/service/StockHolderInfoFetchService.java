@@ -58,26 +58,33 @@ public class StockHolderInfoFetchService {
                 String stockHolderStr = object.getString("gdrs");
                 if (!StringUtils.isEmpty(stockHolderStr)){
                     List<StockHolderDTO> stockHolderDTOS = JSON.parseArray(stockHolderStr,StockHolderDTO.class);
-                    List<StockHolder> tmpList = stockHolderDTOS.stream().map(f->{
-                        StockHolder stockHolder = new StockHolder();
-                        stockHolder.setStockId(stockId);
-                        stockHolder.setNumberOfShareholders(f.getGdrs());
-                        stockHolder.setPerCapitaTradableShares(f.getRjltg());
-                        stockHolder.setLastChange(f.getRjltg_jsqbh());
-                        stockHolder.setStockConvergenceRate(f.getCmjzd());
-                        stockHolder.setPrice(f.getGj());
-                        stockHolder.setPerCapitaHoldingAmount(f.getRjcgje());
-                        stockHolder.setTopTenStockHolder(f.getQsdltgdcghj());
-                        stockHolder.setTopTenStockFlowHolder(f.getQsdltgdcghj());
-                        return stockHolder;
-                    }).collect(Collectors.toList());
-                    stockHolderDAO.batchInsertStockHolder(tmpList);
+                    if (!CollectionUtils.isEmpty(stockHolderDTOS)){
+                        List<StockHolder> tmpList = stockHolderDTOS.stream().map(f->{
+                            StockHolder stockHolder = new StockHolder();
+                            stockHolder.setStockId(stockId);
+                            stockHolder.setNumberOfShareholders(f.getGdrs());
+                            stockHolder.setPerCapitaTradableShares(f.getRjltg());
+                            stockHolder.setLastChange(f.getRjltg_jsqbh());
+                            stockHolder.setStockConvergenceRate(f.getCmjzd());
+                            stockHolder.setPrice(f.getGj());
+                            stockHolder.setPerCapitaHoldingAmount(f.getRjcgje());
+                            stockHolder.setTopTenStockHolder(f.getQsdltgdcghj());
+                            stockHolder.setTopTenStockFlowHolder(f.getQsdltgdcghj());
+                            stockHolder.setReleaseDate(f.getRq());
+                            return stockHolder;
+                        }).collect(Collectors.toList());
+                        try {
+                            stockHolderDAO.batchInsertStockHolder(tmpList);
+                        }catch (Exception exception){
+                            log.error( "exception while excute batchInsertStockHolder " +JSONObject.toJSONString(tmpList) +  stockHolderStr + " :{}",exception);
+                        }
+                    }
                 }
                 String stockHolderTopTenStr = object.getString("sdltgd");
                 if (!StringUtils.isEmpty(stockHolderTopTenStr)){
                     List<StockHolderTopTenOutDTO> outDTOList = JSON.parseArray(stockHolderTopTenStr, StockHolderTopTenOutDTO.class);
                     for (StockHolderTopTenOutDTO dto : outDTOList){
-                        List<StockHolderTopTenDTO> dtos = dto.getSdgd();
+                        List<StockHolderTopTenDTO> dtos = dto.getSdltgd();
                         if (!CollectionUtils.isEmpty(dtos)){
                             List<StockHolderTopTen> list =  dtos.stream().map(h->{
                                 StockHolderTopTen stockHolderTopTen = new StockHolderTopTen();
@@ -92,29 +99,39 @@ public class StockHolderInfoFetchService {
                                 stockHolderTopTen.setReleaseDate(h.getRq());
                                 return stockHolderTopTen;
                             }).collect(Collectors.toList());
-                            stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
+                            try {
+                                stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
+                            }catch (Exception exception){
+                                log.error( "exception while excute batchInsertStockHolderTopTen " +JSONObject.toJSONString(list) + " " + stockHolderTopTenStr + " :{}",exception);
+                            }
                         }
                     }
                 }
                 String stockTopStr = object.getString("zlcc");
                 if (!StringUtils.isEmpty(stockTopStr)){
                     List<StockHolderComponentDTO> tmpList = JSON.parseArray(stockTopStr, StockHolderComponentDTO.class);
-                    List<StockHolderComponent> list = tmpList.stream().map(i->{
-                        StockHolderComponent stockHolderComponent = new StockHolderComponent();
-                        stockHolderComponent.setStockId(stockId);
-                        stockHolderComponent.setOrganizationType(i.getJglx());
-                        stockHolderComponent.setPositions(i.getCcjs());
-                        stockHolderComponent.setNumberOfSharesHeld(i.getCcgs());
-                        stockHolderComponent.setProportionOfTradableShares(i.getZltgbl());
-                        stockHolderComponent.setProportionInTotalEquity(i.getZltgbbl());
-                        stockHolderComponent.setReleaseDate(e.getListingDate());
-                        return stockHolderComponent;
-                    }).collect(Collectors.toList());
-                    stockHolderComponentDAO.batchInsertStockHolderComponent(list);
+                    if (!CollectionUtils.isEmpty(tmpList)){
+                        List<StockHolderComponent> list = tmpList.stream().map(i->{
+                            StockHolderComponent stockHolderComponent = new StockHolderComponent();
+                            stockHolderComponent.setStockId(stockId);
+                            stockHolderComponent.setOrganizationType(i.getJglx());
+                            stockHolderComponent.setPositions(i.getCcjs());
+                            stockHolderComponent.setNumberOfSharesHeld(i.getCcgs());
+                            stockHolderComponent.setProportionOfTradableShares(i.getZltgbl());
+                            stockHolderComponent.setProportionInTotalEquity(i.getZltgbbl());
+                            stockHolderComponent.setReleaseDate(e.getListingDate());
+                            return stockHolderComponent;
+                        }).collect(Collectors.toList());
+                        try {
+                            stockHolderComponentDAO.batchInsertStockHolderComponent(list);
+                        }catch (Exception exception){
+                            log.error( "exception while excute batchInsertStockHolderComponent " +JSONObject.toJSONString(list) + " :{}",exception);
+                        }
+                    }
                 }
             }
             try {
-                Thread.sleep(2 * 1000);
+                Thread.sleep(3 * 1000);
             } catch (InterruptedException ex) {
                 log.error("StockHolderInfoFetchService-fetchStockHolderInfo error:{}",e);
             }

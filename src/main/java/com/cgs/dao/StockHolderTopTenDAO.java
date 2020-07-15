@@ -23,4 +23,5 @@ public interface StockHolderTopTenDAO {
             "</foreach>"+
             "</script>"})
     public void batchInsertStockHolderTopTen(List<StockHolderTopTen> list);
+
 }

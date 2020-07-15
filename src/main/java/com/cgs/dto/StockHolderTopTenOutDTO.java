@@ -7,5 +7,5 @@ import java.util.List;
 @Data
 public class StockHolderTopTenOutDTO {
     private String rq;
-    private List<StockHolderTopTenDTO> sdgd;
+    private List<StockHolderTopTenDTO> sdltgd;
 }
