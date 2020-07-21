@@ -33,7 +33,6 @@ public class ShStockInfoDTO {
     private String minTrAmtDate;
     private Double minTrVol;
     private Double minTrVol1;
-    private Double minTrVolDate;
     private Double openPrice;
     private String openTxDate;
     private String productName;

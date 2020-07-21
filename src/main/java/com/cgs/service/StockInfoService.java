@@ -70,7 +70,7 @@ public class StockInfoService {
                     }
                     List<SzStockInfoDTO> szStockInfoDTOS = JSON.parseArray(stockInfo,SzStockInfoDTO.class);
                     SzStockInfoDTO stockInfoDTO = szStockInfoDTOS.stream().filter(e->{
-                        return e.isEmpty();
+                        return !e.isEmpty();
                     }).findAny().get();
                     StockInfo info = convertSzDtoToStockInfo(simpleDateFormat,stockInfoDTO,item.getStockId());
                     stockInfos.add(info);
@@ -81,7 +81,7 @@ public class StockInfoService {
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
-        String monthStr = String.valueOf(year).concat(String.valueOf(month));
+        String monthStr = month<10? String.valueOf(year).concat("0").concat(String.valueOf(month)) : String.valueOf(year).concat(String.valueOf(month));
         String date = simpleDateFormat.format(new Date());
         if (!CollectionUtils.isEmpty(shStockList)){
             for (StockItem item : shStockList){
@@ -98,10 +98,11 @@ public class StockInfoService {
                 JSONObject jsonObject = JSON.parseObject(result);
                 List<ShStockInfoDTO> shStockInfoDTOList = JSON.parseArray(jsonObject.getString("result"),ShStockInfoDTO.class);
                 ShStockInfoDTO shStockInfoDTO = shStockInfoDTOList.stream().filter(e->{
-                    return StringUtils.isEmpty(e.getMaxHighPriceDate()) && date.equals(e.getMaxHighPriceDate());
+                    return !StringUtils.isEmpty(e.getMaxHighPriceDate()) && date.equals(e.getMaxHighPriceDate());
                 }).findAny().get();
                 StockInfo stockInfo = convertShDtoToStockInfo(simpleDateFormat,shStockInfoDTO,item.getStockId());
                 stockInfos.add(stockInfo);
+                Thread.sleep(1000);
             }
         }
         stockInfoDAO.batchInsertStockInfo(stockInfos);
@@ -110,14 +111,14 @@ public class StockInfoService {
     private StockInfo convertSzDtoToStockInfo(SimpleDateFormat simpleDateFormat,SzStockInfoDTO szStockInfoDTO, String stockId){
         StockInfo stockInfo = new StockInfo();
         stockInfo.setStockId(stockId);
-        stockInfo.setTotalVolume(Double.valueOf(szStockInfoDTO.getNow_cjje()));
-        stockInfo.setTotalTransactionAmount(Double.valueOf(szStockInfoDTO.getNow_cjbs()));
-        stockInfo.setPeRatio(Double.valueOf(szStockInfoDTO.getNow_syl()));
-        stockInfo.setAverageTurnoverRate(Double.valueOf(szStockInfoDTO.getNow_hsl()));
-        stockInfo.setTotalMarketValue(Double.valueOf(szStockInfoDTO.getNow_sjzz()));
-        stockInfo.setFlowMarketValue(Double.valueOf(szStockInfoDTO.getNow_ltsz()));
-        stockInfo.setTotalShareCapital(Double.valueOf(szStockInfoDTO.getNow_zgb()));
-        stockInfo.setStockCirculationShareCapital(Double.valueOf(szStockInfoDTO.getNow_ltgb()));
+        stockInfo.setTotalVolume(Double.valueOf(szStockInfoDTO.getNow_cjje().replaceAll(",","")));
+        stockInfo.setTotalTransactionAmount(Double.valueOf(szStockInfoDTO.getNow_cjbs().replaceAll(",","")));
+        stockInfo.setPeRatio(Double.valueOf(szStockInfoDTO.getNow_syl().replaceAll(",","")));
+        stockInfo.setAverageTurnoverRate(Double.valueOf(szStockInfoDTO.getNow_hsl().replaceAll(",","")));
+        stockInfo.setTotalMarketValue(Double.valueOf(szStockInfoDTO.getNow_sjzz().replaceAll(",","")));
+        stockInfo.setFlowMarketValue(Double.valueOf(szStockInfoDTO.getNow_ltsz().replaceAll(",","")));
+        stockInfo.setTotalShareCapital(Double.valueOf(szStockInfoDTO.getNow_zgb().replaceAll(",","")));
+        stockInfo.setStockCirculationShareCapital(Double.valueOf(szStockInfoDTO.getNow_ltgb().replaceAll(",","")));
         stockInfo.setDate(simpleDateFormat.format(new Date()));
         return stockInfo;
     }
