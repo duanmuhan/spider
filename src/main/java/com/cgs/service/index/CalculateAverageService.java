@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DecimalFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,13 +36,22 @@ public class CalculateAverageService {
         if (CollectionUtils.isEmpty(stockIds)){
             return;
         }
-        List<AverageItem> averageItems = new ArrayList<>();
         for (String stockId : stockIds){
+            log.info("start to calculate stockid:{}",stockId);
             List<KItem> kItems = kItemDAO.queryKItemsbyStockId(stockId);
-            List<AverageItem> fiveDayList = calculate5DayAverage(kItems);
-            averageItems.addAll(fiveDayList);
+            if (!CollectionUtils.isEmpty(kItems)){
+                kItems = kItems.stream().sorted(Comparator.comparing(KItem::getDate)).collect(Collectors.toList());
+                List<AverageItem> fiveDayList = calculate5DayAverage(kItems);
+//                List<AverageItem> originFiveDayList = averageDAO.queryAverageItemByStockId(stockId,AverageType.FIVE_DAYS);
+                List<AverageItem> tenDayList = calculate10DayAverage(kItems);
+                List<AverageItem> originTendayList = averageDAO.queryAverageItemByStockId(stockId,AverageType.TEN_DAYS);
+//                fiveDayList.removeAll(originFiveDayList);
+                tenDayList.removeAll(originTendayList);
+//                averageDAO.batchInsertAverageItem(fiveDayList);
+                averageDAO.batchInsertAverageItem(tenDayList);
+            }
         }
-        averageDAO.batchInsertAverageItem(averageItems);
+
     }
 
     public List<AverageItem> calculateAverage(List<KItem> list, Integer day,Integer type){
@@ -52,24 +59,29 @@ public class CalculateAverageService {
         if (day <= 0){
             return itemList;
         }
-        int index = 0;
-        while (index < list.size()){
-            if (index - day < 0){
-                index ++;
-                continue;
-            }
+        DecimalFormat df = new DecimalFormat("#.00");
+        int index = list.size();
+        while (index >0){
             double totalPrice = 0;
-            for (int i=0; i<day; i++){
-                totalPrice = list.get(i).getClosePrice() + totalPrice;
+            double averagePrice = 0;
+            if (index>=day) {
+                for (int i = 0; i < day; i++) {
+                    totalPrice = list.get(index-1 - i).getClosePrice() + totalPrice;
+                }
+                averagePrice = totalPrice / day;
+            }else if (index< day){
+                for (int i=0; i<index; i++){
+                    totalPrice = list.get(i).getClosePrice() + totalPrice;
+                }
+                averagePrice = totalPrice / day;
             }
-            double averagePrice = totalPrice / day;
             AverageItem item = new AverageItem();
             item.setType(type);
-            item.setDate(list.get(index).getDate());
-            item.setPrice(averagePrice);
-            item.setStockId(list.get(index).getStockId());
+            item.setDate(list.get(index-1).getDate());
+            item.setPrice(Double.valueOf(df.format(averagePrice)));
+            item.setStockId(list.get(index-1).getStockId());
             itemList.add(item);
-            index ++;
+            index--;
         }
         return itemList;
     }

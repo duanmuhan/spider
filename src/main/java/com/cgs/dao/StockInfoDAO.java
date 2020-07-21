@@ -11,12 +11,17 @@ public interface StockInfoDAO {
 
     String TABLE_NAME = "stock_info";
 
-    String COLUMNS = "";
+    String COLUMNS = " stock_id, total_transaction_amount, total_volume, total_share_capital, stock_circulation_share_capital, " +
+            "total_market_value, flow_market_value, pe_ratio, average_turnover_rate, date ";
 
-    @Insert("")
-    Integer addStockItem(StockInfo item);
-
-    @Insert("insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values(#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate}, #{item.updateTime})")
+    @Insert({"<script>"+
+            "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +
+            "<foreach collection='list' index='index' item='item' separator=','>" +
+            "(#{item.stockId}, #{item.totalTransactionAmount}, #{item.totalVolume}, #{item.totalShareCapital}, #{item.stockCirculationShareCapital} " +
+            ", #{item.totalMarketValue}, #{item.flowMarketValue} " +
+            ", #{item.peRatio} ,#{item.averageTurnoverRate} ,#{item.date})" +
+            "</foreach>"+
+            "</script>"})
     public void batchInsertStockInfo(List<StockInfo> list);
 
 }
