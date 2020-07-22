@@ -60,6 +60,7 @@ public class StockInfoService {
 
         if (!CollectionUtils.isEmpty(szStockList)){
             for (StockItem item : szStockList){
+                log.info("start to request stock:{}",item.getStockId());
                 String requestUrl = stockCoreInfoSzUrl.replace("seccode",item.getStockId());
                 String result = HttpRequestUtil.getRequestDirectly(requestUrl);
                 if (!StringUtils.isEmpty(result)){
@@ -68,12 +69,16 @@ public class StockInfoService {
                     if (StringUtils.isEmpty(stockInfo)){
                         continue;
                     }
-                    List<SzStockInfoDTO> szStockInfoDTOS = JSON.parseArray(stockInfo,SzStockInfoDTO.class);
-                    SzStockInfoDTO stockInfoDTO = szStockInfoDTOS.stream().filter(e->{
-                        return !e.isEmpty();
-                    }).findAny().get();
-                    StockInfo info = convertSzDtoToStockInfo(simpleDateFormat,stockInfoDTO,item.getStockId());
-                    stockInfos.add(info);
+                    try {
+                        List<SzStockInfoDTO> szStockInfoDTOS = JSON.parseArray(stockInfo,SzStockInfoDTO.class);
+                        SzStockInfoDTO stockInfoDTO = szStockInfoDTOS.stream().filter(e->{
+                            return !e.isEmpty();
+                        }).findAny().get();
+                        StockInfo info = convertSzDtoToStockInfo(simpleDateFormat,stockInfoDTO,item.getStockId());
+                        stockInfos.add(info);
+                    }catch (Exception e){
+                        log.error("fetch sz stock exception :{},{}",item.getStockId(),e);
+                    }
                 }
                 Thread.sleep(1000);
             }
@@ -85,6 +90,7 @@ public class StockInfoService {
         String date = simpleDateFormat.format(new Date());
         if (!CollectionUtils.isEmpty(shStockList)){
             for (StockItem item : shStockList){
+                log.info("start to request stock:{}",item.getStockId());
                 String requestUrl = stockCoreInfoShUrl.replace("fundid",item.getStockId())
                                                     .replace("month",monthStr)
                                                     .replace("inyear",String.valueOf(year))
@@ -97,11 +103,16 @@ public class StockInfoService {
                 }
                 JSONObject jsonObject = JSON.parseObject(result);
                 List<ShStockInfoDTO> shStockInfoDTOList = JSON.parseArray(jsonObject.getString("result"),ShStockInfoDTO.class);
-                ShStockInfoDTO shStockInfoDTO = shStockInfoDTOList.stream().filter(e->{
-                    return !StringUtils.isEmpty(e.getMaxHighPriceDate()) && date.equals(e.getMaxHighPriceDate());
-                }).findAny().get();
-                StockInfo stockInfo = convertShDtoToStockInfo(simpleDateFormat,shStockInfoDTO,item.getStockId());
-                stockInfos.add(stockInfo);
+                try {
+                    ShStockInfoDTO shStockInfoDTO = shStockInfoDTOList.stream().filter(e->{
+                        return !StringUtils.isEmpty(e.getMaxHighPriceDate()) && date.equals(e.getMaxHighPriceDate());
+                    }).findAny().get();
+                    StockInfo stockInfo = convertShDtoToStockInfo(simpleDateFormat,shStockInfoDTO,item.getStockId());
+                    stockInfos.add(stockInfo);
+                }catch (Exception e){
+                    log.error("fetch sh stock exception :{},{}",item.getStockId(),e);
+                }
+
                 Thread.sleep(1000);
             }
         }
