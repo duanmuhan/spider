@@ -71,7 +71,7 @@ public class HttpRequestUtil {
 			CloseableHttpResponse response = httpClient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 			if(entity != null){
-				pageContent = EntityUtils.toString(entity);
+				pageContent = EntityUtils.toString(entity,"utf-8");
 				EntityUtils.consume(entity);
 			}
 		}catch (Exception e){
