@@ -89,6 +89,13 @@ public class IndustryAndInformationTechnologyService {
                        if (!CollectionUtils.isEmpty(plateInfos)){
                          PolicyInfo policyInfo = new PolicyInfo();
                          policyInfo.setRelease_date(titleElement.text());
+                         policyInfo.setSource(contentUrl);
+                         policyInfo.setTargetPlate(matchedPlateInfo.stream().map(e->e.getPlateName()).collect(Collectors.joining(",")));
+                         policyInfo.setTargetPlateId(matchedPlateInfo.stream().map(e->e.getPlateId()).collect(Collectors.joining(",")));
+                         policyInfo.setTitle(titleElement.text());
+                         policyInfo.setRelease_date(releaseDate.text());
+                         policyInfo.setPlatform(NAME);
+                         policyInfos.add(policyInfo);
                        }
                     }
                 }

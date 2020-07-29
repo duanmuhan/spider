@@ -9,4 +9,5 @@ public class PolicyInfo {
     private String targetPlateId;
     private String source;
     private String release_date;
+    private String platform;
 }

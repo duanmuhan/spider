@@ -1,7 +1,6 @@
 package com.cgs.dao;
 
 import com.cgs.entity.PolicyInfo;
-import com.cgs.entity.StockHolderComponent;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +11,7 @@ public interface PolicyTableDAO {
 
     String TABLE_NAME = "policy_table";
 
-    String COLUMNS = " id , title , target_plate ,source ,release_date ";
+    String COLUMNS = " title , target_plate , target_plate_id, source ,release_date";
 
     public void insertPolicyTable(PolicyInfo policyInfo);
 
