@@ -1,7 +1,9 @@
 package com.cgs.service.info;
 
 import com.cgs.dao.PlateDAO;
+import com.cgs.dao.PolicyTableDAO;
 import com.cgs.entity.PlateInfo;
+import com.cgs.entity.PolicyInfo;
 import com.cgs.util.HttpRequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -17,10 +19,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayDeque;
-import java.util.Date;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -35,6 +34,8 @@ public class IndustryAndInformationTechnologyService {
 
     private static String PREFIX = "http://www.miit.gov.cn";
 
+    private static String NAME = "中华人民共和国工业和信息化部";
+
     private static ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<>();
 
     private Queue<String> areaQueue = new ArrayDeque<>();
@@ -42,7 +43,10 @@ public class IndustryAndInformationTechnologyService {
     private Queue<String> contentQueue = new ArrayDeque<>();
 
     @Autowired
+    private PolicyTableDAO policyTableDAO;
+    @Autowired
     private PlateDAO plateDAO;
+
 
 
     public void fetchIndustryService() throws UnsupportedEncodingException {
@@ -50,6 +54,7 @@ public class IndustryAndInformationTechnologyService {
         if (StringUtils.isEmpty(content)){
             return;
         }
+        List<PolicyInfo> policyInfos = new ArrayList<>();
         Document document = Jsoup.parse(content);
         Elements dtElements = document.getElementsByTag("dt");
         for (Element dtElement : dtElements){
@@ -75,16 +80,24 @@ public class IndustryAndInformationTechnologyService {
                 }
                 Document contentDocument = Jsoup.parse(pageContent);
                 Element element = contentDocument.getElementById("con_con");
+                Element titleElement = contentDocument.getElementById("con_title");
+                Element releaseDate = contentDocument.getElementById("con_time");
                 if (!ObjectUtils.isEmpty(element)){
                     String text = element.text();
                     if (!StringUtils.isEmpty(text)){
-                        String result = isTextContainsPlateName(text,plateInfos);
+                       List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(text,plateInfos);
+                       if (!CollectionUtils.isEmpty(plateInfos)){
+                         PolicyInfo policyInfo = new PolicyInfo();
+                         policyInfo.setRelease_date(titleElement.text());
+                       }
                     }
                 }
             }catch (Exception e){
                 log.error("error is :{}",e);
             }
         }
+
+        policyTableDAO.batchInsertPolicyTable(policyInfos);
     }
 
     private void fetchIndustryServiceArea(String url){
@@ -128,20 +141,17 @@ public class IndustryAndInformationTechnologyService {
         return sdf;
     }
 
-    private String isTextContainsPlateName(String text,List<PlateInfo> plateInfos){
+    private List<PlateInfo> isTextContainsPlateName(String text,List<PlateInfo> plateInfos){
         if (CollectionUtils.isEmpty(plateInfos) || StringUtils.isEmpty(text)){
-            return "";
+            return null;
         }
-        StringBuilder sb = new StringBuilder();
-        List<String> plateNames = plateInfos.stream().map(e->e.getPlateName()).collect(Collectors.toList());
-        for (String plateName : plateNames){
-            plateName.replace("概念","");
+        List<PlateInfo> resultList = new ArrayList<>();
+        for (PlateInfo plateInfo : plateInfos){
+            String plateName = plateInfo.getPlateName().replace("概念","");
             if (text.contains(plateName)){
-                sb.append(plateName);
-                sb.append(";");
+                resultList.add(plateInfo);
             }
         }
-        System.out.println(sb.toString());
-        return sb.toString();
+        return resultList;
     }
 }
