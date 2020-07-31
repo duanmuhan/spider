@@ -58,6 +58,8 @@ public class DevelopmentAndReformCommissionService {
             liUrl = PREFIX + liUrl.replace(".","");
             areaQueue.add(liUrl);
         }
+        String dongtaiUrl = dongTaiElement.select("a").first().attr("href");
+        areaQueue.add(dongtaiUrl);
 
     }
 
