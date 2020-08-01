@@ -80,6 +80,23 @@ public class HttpRequestUtil {
 
 		return pageContent;
 	}
+
+	public static String getRequestDirectlyWithEncoding(String url,String encoding){
+		String pageContent = "";
+		HttpGet httpget = new HttpGet(url);
+		try {
+			CloseableHttpResponse response = httpClient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			if(entity != null){
+				pageContent = EntityUtils.toString(entity,encoding);
+				EntityUtils.consume(entity);
+			}
+		}catch (Exception e){
+			log.error("request url exception, url is " + url, e);
+		}
+
+		return pageContent;
+	}
 	
 	public static String postRequest(String url) throws ClientProtocolException, IOException{
 		HttpPost httpPost = new HttpPost(url);
