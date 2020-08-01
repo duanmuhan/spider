@@ -3,6 +3,10 @@ package com.cgs.service.info;
 import com.cgs.dao.PlateDAO;
 import com.cgs.dao.PolicyTableDAO;
 import com.cgs.util.HttpRequestUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,10 @@ public class SateCouncilService {
         if (StringUtils.isEmpty(content)){
             return;
         }
+        Document document = Jsoup.parse(content);
+        Elements liElements = document.getElementsByTag("li");
+        for (Element liElement : liElements){
 
+        }
     }
 }
