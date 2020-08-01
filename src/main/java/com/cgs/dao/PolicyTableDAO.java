@@ -11,15 +11,14 @@ public interface PolicyTableDAO {
 
     String TABLE_NAME = "policy_table";
 
-    String COLUMNS = " title , target_plate , target_plate_id, source ,release_date";
+    String COLUMNS = " title , target_plate , target_plate_id, source , plateform,release_date";
 
-    public void insertPolicyTable(PolicyInfo policyInfo);
 
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +
             "<foreach collection='list' index='index' item='item' separator=','>" +
-            "(#{item.title}, #{item.targetPlate}, #{item.targetPlateId} ,  #{item.source}" +
-            ", #{item.release_date})" +
+            "(#{item.title}, #{item.targetPlate}, #{item.targetPlateId} , #{item.source}" +
+            ", #{item.platform} ,#{item.release_date})" +
             "</foreach>"+
             "</script>"})
     public void batchInsertPolicyTable(List<PolicyInfo> list);
