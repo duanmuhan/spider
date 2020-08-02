@@ -132,7 +132,7 @@ public class IndustryAndInformationTechnologyService {
                     String date = liElement.select("span").first().text();
                     SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
                     String currentDate = dateFormat.format(new Date());
-                    if (!currentDate.equals(date)){
+                    if (currentDate.equals(date)){
                         contentQueue.add(liUrl);
                     }
                 }

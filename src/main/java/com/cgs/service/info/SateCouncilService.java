@@ -76,7 +76,7 @@ public class SateCouncilService {
             String date = dateElement.text().substring(0,10);
             SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
             String currentDate = dateFormat.format(new Date());
-            if (!date.equals(currentDate)){
+            if (date.equals(currentDate)){
                 String articleContent = contentElement.text();
                 String title = titleElement.text();
                 List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(articleContent,plateInfos);
