@@ -11,7 +11,7 @@ public interface PolicyTableDAO {
 
     String TABLE_NAME = "policy_table";
 
-    String COLUMNS = " title , target_plate , target_plate_id, source , plateform,release_date";
+    String COLUMNS = " title , target_plate , target_plate_id, source , platform ,release_date";
 
 
     @Insert({"<script>"+
