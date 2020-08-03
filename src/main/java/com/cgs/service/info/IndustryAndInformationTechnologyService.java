@@ -49,7 +49,7 @@ public class IndustryAndInformationTechnologyService {
 
 
 
-    public void fetchIndustryService() throws UnsupportedEncodingException {
+    public void fetchIndustryService() {
         String content = HttpRequestUtil.getRequestDirectly(requestUrl);
         if (StringUtils.isEmpty(content)){
             return;

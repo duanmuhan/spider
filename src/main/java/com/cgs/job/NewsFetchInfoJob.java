@@ -26,6 +26,9 @@ public class NewsFetchInfoJob {
     private PartyCentralCommitteeService partyCentralCommitteeService;
 
     public void fetchNewsInfo(){
-
+        sateCouncilService.fetchStateCouncilService();
+        developmentAndReformCommissionService.fetchDevelopmentReformService();
+        industryAndInformationTechnologyService.fetchIndustryService();
+        partyCentralCommitteeService.fetchPartyCentralCommitee();
     }
 }
