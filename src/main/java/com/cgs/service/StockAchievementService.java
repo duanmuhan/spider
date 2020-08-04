@@ -3,6 +3,7 @@ package com.cgs.service;
 import com.cgs.dao.StockAchievementDAO;
 import com.cgs.entity.StockAchievement;
 import com.cgs.util.HttpRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,6 +19,7 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 public class StockAchievementService {
 
     @Autowired
@@ -39,6 +41,7 @@ public class StockAchievementService {
             if (ObjectUtils.isEmpty(trElements)){
                 break;
             }
+            log.info("start to request startIndex : {}",startIndex);
             for (Element element : trElements){
                 Elements tdElements = element.getElementsByTag("td");
                 String stockId = tdElements.get(1).text();
