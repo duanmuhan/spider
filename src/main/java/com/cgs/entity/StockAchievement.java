@@ -8,7 +8,7 @@ public class StockAchievement {
     private String stockName;
     private String achievementType;
     private String achievementTitle;
-    private String profileChangeRate;
+    private Double profileChangeRate;
     private String profileLastYear;
     private String releaseDate;
 }

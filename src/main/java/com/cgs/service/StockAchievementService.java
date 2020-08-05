@@ -57,7 +57,7 @@ public class StockAchievementService {
                 stockAchievement.setStockName(stockName);
                 stockAchievement.setAchievementType(achievementType);
                 stockAchievement.setAchievementTitle(achievementTitle);
-                stockAchievement.setProfileChangeRate(profileChangeRate);
+                stockAchievement.setProfileChangeRate((StringUtils.isEmpty(profileChangeRate) || "-".equals(profileChangeRate))? 0:Double.valueOf(profileChangeRate));
                 stockAchievement.setProfileLastYear(profileLastYear);
                 stockAchievement.setReleaseDate(releaseDate);
                 stockAchievements.add(stockAchievement);
