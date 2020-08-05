@@ -50,7 +50,7 @@ public class StockAchievementService {
                 String achievementTitle = tdElements.get(4).text();
                 String profileChangeRate = tdElements.get(5).text();
                 String profileLastYear = tdElements.get(5).text();
-                String releaseDate = tdElements.get(6).text();
+                String releaseDate = tdElements.get(7).text();
 
                 StockAchievement stockAchievement = new StockAchievement();
                 stockAchievement.setStockId(stockId);
