@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -15,6 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -81,6 +83,33 @@ public class HttpRequestUtil {
 		return pageContent;
 	}
 
+	public static String getRequestWithWenCaiHeader(String url){
+        String pageContent = "";
+        HttpGet httpget = new HttpGet(url);
+
+        httpget.addHeader("Host","www.iwencai.com");
+        httpget.addHeader("Connection","keep-alive");
+        httpget.addHeader("Cache-Control","max-age=0");
+        httpget.addHeader("Upgrade-Insecure-Requests","1");
+        httpget.addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36");
+        httpget.addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        httpget.addHeader("Accept-Encoding","gzip, deflate");
+        httpget.addHeader("Accept-Language","zh-CN,zh;q=0.9");
+        httpget.addHeader("Cookie","cid=60c9c7cb60b2c9fc3e3f944676106a2b1595704647; ComputerID=60c9c7cb60b2c9fc3e3f944676106a2b1595704647; WafStatus=0; guideState=1; PHPSESSID=8514f66557ffd4d0702a78fb288ff165; iwencaisearchquery=002985; v=AhdjloSYBEeTbIDPMJJKJg-opoBiXOu-xTBvMmlEM-ZNmDl2cSx7DtUA_8N6");
+
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpget);
+            HttpEntity entity = response.getEntity();
+            if(entity != null){
+                pageContent = EntityUtils.toString(entity,"utf-8");
+                EntityUtils.consume(entity);
+            }
+        }catch (Exception e){
+            log.error("request url exception, url is " + url, e);
+        }
+
+        return pageContent;
+    }
 	public static String getRequestDirectlyWithEncoding(String url,String encoding){
 		String pageContent = "";
 		HttpGet httpget = new HttpGet(url);
