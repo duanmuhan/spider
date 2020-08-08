@@ -10,10 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
@@ -95,7 +101,7 @@ public class HttpRequestUtil {
         httpget.addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
         httpget.addHeader("Accept-Encoding","gzip, deflate");
         httpget.addHeader("Accept-Language","zh-CN,zh;q=0.9");
-        httpget.addHeader("Cookie","cid=60c9c7cb60b2c9fc3e3f944676106a2b1595704647; ComputerID=60c9c7cb60b2c9fc3e3f944676106a2b1595704647; WafStatus=0; guideState=1; PHPSESSID=8514f66557ffd4d0702a78fb288ff165; iwencaisearchquery=002985; v=AhdjloSYBEeTbIDPMJJKJg-opoBiXOu-xTBvMmlEM-ZNmDl2cSx7DtUA_8N6");
+        httpget.addHeader("Cookie","cid=60c9c7cb60b2c9fc3e3f944676106a2b1595704647; ComputerID=60c9c7cb60b2c9fc3e3f944676106a2b1595704647; WafStatus=0; guideState=1; PHPSESSID=8514f66557ffd4d0702a78fb288ff165; iwencaisearchquery=002985;");
 
         try {
             CloseableHttpResponse response = httpClient.execute(httpget);
@@ -140,6 +146,38 @@ public class HttpRequestUtil {
 		}
 		String responseContent = EntityUtils.toString(httpEntity);
 		return responseContent;
+	}
+
+	public static String getCookies(String url) throws IOException {
+		// 全局请求设置
+		RequestConfig globalConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		// 创建cookie store的本地实例
+		CookieStore cookieStore = new BasicCookieStore();
+		// 创建HttpClient上下文
+		HttpClientContext context = HttpClientContext.create();
+		context.setCookieStore(cookieStore);
+
+		// 创建一个HttpClient
+		CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(globalConfig)
+				.setDefaultCookieStore(cookieStore).build();
+
+		CloseableHttpResponse res = null;
+
+		// 创建一个get请求用来获取必要的Cookie，如_xsrf信息
+		HttpGet get = new HttpGet(url);
+
+		res = httpClient.execute(get, context);
+		// 获取常用Cookie,包括_xsrf信息
+		StringBuffer cookie=new StringBuffer();
+		for (Cookie c : cookieStore.getCookies()) {
+			cookie.append(c.getName()+"="+c.getValue()+";");
+			System.out.println(c.getName() + ": " + c.getValue());
+		}
+
+		String cookieres=cookie.toString();
+		cookieres=cookieres.substring(0,cookieres.length()-1);
+		res.close();
+		return cookieres;
 	}
 	
 	public static Set<String> getDomainName(String content){
