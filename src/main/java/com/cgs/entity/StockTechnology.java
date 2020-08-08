@@ -9,6 +9,6 @@ public class StockTechnology {
     private String special;
     private String query;
     private String tag;
-    private String desc;
+    private String descStr;
     private String releaseDate;
 }

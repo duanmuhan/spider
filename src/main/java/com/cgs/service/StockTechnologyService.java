@@ -7,6 +7,8 @@ import com.cgs.dao.StockTechnologyDAO;
 import com.cgs.dto.StockTechnologyDTO;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.StockTechnology;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.WebDriver;
@@ -28,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StockTechnologyService {
 
     @Value("${stock.technology.url}")
@@ -50,12 +53,12 @@ public class StockTechnologyService {
         if (CollectionUtils.isEmpty(stockItemList)){
             return;
         }
-        SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyy-MM-dd");
         String date = simpleDateFormat.format(new Date());
-        SimpleDateFormat releaseSimpleDateFormat = getSimpleDateFormat("yyyy-MM-dd");
-        String releaseDate = releaseSimpleDateFormat.format(new Date());
+        String releaseDate = date.replaceAll("-","");
         List<StockTechnology> stockTechnologies = new ArrayList<>();
         for (StockItem stockItem : stockItemList){
+            log.info("fetch stock id ：{}",stockItem.getStockId());
             String url = requestUrl.replace("stockId",stockItem.getStockId());
             webDriver.get(url);
             String content = webDriver.getPageSource();
@@ -76,7 +79,8 @@ public class StockTechnologyService {
             for (Map.Entry<String,Map<String,StockTechnologyDTO>> entry : map.entrySet()){
                 Map<String,StockTechnologyDTO> entryMap = entry.getValue();
                 for (Map.Entry<String,StockTechnologyDTO> entryMapEntry : entryMap.entrySet()){
-                    StockTechnologyDTO dto = entryMapEntry.getValue();
+                    String json = JSON.toJSONString(entryMapEntry.getValue());
+                    StockTechnologyDTO dto = JSON.parseObject(json,StockTechnologyDTO.class);
                     StockTechnology stockTechnology = new StockTechnology();
                     stockTechnology.setType(entry.getKey());
                     stockTechnology.setStockId(stockItem.getStockId());
@@ -87,7 +91,7 @@ public class StockTechnologyService {
                         String tag = list.stream().collect(Collectors.joining(","));
                         stockTechnology.setTag(tag);
                     }
-                    stockTechnology.setDesc(stockTechnology.getDesc());
+                    stockTechnology.setDescStr(dto.getDesc());
                     stockTechnology.setReleaseDate(releaseDate);
                     stockTechnologies.add(stockTechnology);
                 }

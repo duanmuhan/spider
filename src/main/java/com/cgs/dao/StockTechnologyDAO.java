@@ -1,6 +1,5 @@
 package com.cgs.dao;
 
-import com.cgs.entity.StockPlateInfoMapping;
 import com.cgs.entity.StockTechnology;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,7 @@ public interface StockTechnologyDAO {
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +
             "<foreach collection='list' index='index' item='item' separator=','>" +
-            "(#{item.stockId}, #{item.type}, #{item.special}, #{item.query}, #{item.tag} , #{item.desc}, #{item.release_date})" +
+            "(#{item.stockId}, #{item.type}, #{item.special}, #{item.query}, #{item.tag}, #{item.desc}, #{item.releaseDate})" +
             "</foreach>"+
             "</script>"}
     )
