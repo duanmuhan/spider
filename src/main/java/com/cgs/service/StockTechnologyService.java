@@ -92,7 +92,7 @@ public class StockTechnologyService {
                         stockTechnology.setTag(tag);
                     }
                     stockTechnology.setDescStr(dto.getDesc());
-                    stockTechnology.setReleaseDate(releaseDate);
+                    stockTechnology.setReleaseDate(date);
                     stockTechnologies.add(stockTechnology);
                 }
             }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface StockTechnologyDAO {
 
     String TABLE_NAME = " stock_technology ";
-    String COLUMNS = " stock_id, type, special, query, tag, desc, release_date ";
+    String COLUMNS = "stock_id, type, special, query, tag, desc, release_date";
 
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +
