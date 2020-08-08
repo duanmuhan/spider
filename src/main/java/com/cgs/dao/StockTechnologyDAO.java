@@ -10,12 +10,12 @@ import java.util.List;
 public interface StockTechnologyDAO {
 
     String TABLE_NAME = " stock_technology ";
-    String COLUMNS = " stock_id, type, special, query, tag, desc, release_date";
+    String COLUMNS = " stock_id, type, special, query, tag, desc, release_date ";
 
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +
             "<foreach collection='list' index='index' item='item' separator=','>" +
-            "(#{item.stockId}, #{item.type}, #{item.special}, #{item.query}, #{item.tag}, #{item.desc}, #{item.releaseDate})" +
+            "(#{item.stockId}, #{item.type}, #{item.special}, #{item.query}, #{item.tag}, #{item.descStr}, #{item.releaseDate})" +
             "</foreach>"+
             "</script>"}
     )
