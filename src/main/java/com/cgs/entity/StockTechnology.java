@@ -7,7 +7,7 @@ public class StockTechnology {
     private String stockId;
     private String type;
     private String special;
-    private String query;
+    private String queryStr;
     private String tag;
     private String descStr;
     private String releaseDate;

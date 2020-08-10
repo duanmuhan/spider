@@ -15,7 +15,7 @@ public interface StockTechnologyDAO {
     @Insert({"<script>"+
             "insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values " +
             "<foreach collection='list' index='index' item='item' separator=','>" +
-            "(#{item.stockId}, #{item.type}, #{item.special}, #{item.query}, #{item.tag}, #{item.descStr}, #{item.releaseDate})" +
+            "(#{item.stockId}, #{item.type}, #{item.special}, #{item.queryStr}, #{item.tag}, #{item.descStr}, #{item.releaseDate})" +
             "</foreach>"+
             "</script>"}
     )
