@@ -63,26 +63,26 @@ public class StockTechnologyService {
         SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyy-MM-dd");
         String date = simpleDateFormat.format(new Date());
         String releaseDate = date.replaceAll("-","");
-        List<StockTechnology> stockTechnologies = new ArrayList<>();
         List<StockTechnologyScore> stockTechnologyScoreList = new ArrayList<>();
         for (StockItem stockItem : stockItemList){
-            log.info("fetch stock id :{}",stockItem.getStockId());
-            String url = requestUrl.replace("stockId",stockItem.getStockId()).replaceAll("currentDate",releaseDate);
-            webDriver.get(url);
-            String content = webDriver.getPageSource();
-            if (StringUtils.isEmpty(content)){
-                continue;
-            }
-            Document document = Jsoup.parse(content);
-            String text = document.text();
-            if (StringUtils.isEmpty(text)){
-                continue;
-            }
-            JSONObject object = JSON.parseObject(text).getJSONObject("data").getJSONObject("data").getJSONObject("result");
-            if (ObjectUtils.isEmpty(object)){
-                continue;
-            }
             try{
+                List<StockTechnology> stockTechnologies = new ArrayList<>();
+                log.info("fetch stock id :{}",stockItem.getStockId());
+                String url = requestUrl.replace("stockId",stockItem.getStockId()).replaceAll("currentDate",releaseDate);
+                webDriver.get(url);
+                String content = webDriver.getPageSource();
+                if (StringUtils.isEmpty(content)){
+                    continue;
+                }
+                Document document = Jsoup.parse(content);
+                String text = document.text();
+                if (StringUtils.isEmpty(text)){
+                    continue;
+                }
+                JSONObject object = JSON.parseObject(text).getJSONObject("data").getJSONObject("data").getJSONObject("result");
+                if (ObjectUtils.isEmpty(object)){
+                    continue;
+                }
                 object.remove("created");
                 Map<String,Map<String, StockTechnologyDTO>> map = (Map<String, Map<String, StockTechnologyDTO>>) JSON.parse(object.toJSONString());
                 for (Map.Entry<String,Map<String,StockTechnologyDTO>> entry : map.entrySet()){
@@ -105,11 +105,11 @@ public class StockTechnologyService {
                         stockTechnologies.add(stockTechnology);
                     }
                 }
+                if (!CollectionUtils.isEmpty(stockTechnologies)){
+                    stockTechnologyDAO.batchInsertStockTechnology(stockTechnologies);
+                }
             }catch (Exception e){
                 log.error("exception is :{}",e);
-            }
-            if (!CollectionUtils.isEmpty(stockTechnologies)){
-                stockTechnologyDAO.batchInsertStockTechnology(stockTechnologies);
             }
             Thread.sleep(1000);
         }
