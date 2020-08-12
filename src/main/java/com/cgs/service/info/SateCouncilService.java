@@ -62,35 +62,40 @@ public class SateCouncilService {
         List<PolicyInfo> policyInfos = new ArrayList<>();
         while (!contentQueue.isEmpty()){
             String url = contentQueue.poll();
-            String pageContent = HttpRequestUtil.getRequestDirectly(url);
-            Document pageDocument = Jsoup.parse(pageContent);
-            Element titleElement = pageDocument.getElementsByTag("h1").first();
-            Element contentElement = pageDocument.getElementById("UCAP-CONTENT");
-            Element dateElement = pageDocument.getElementsByClass("pages-date").first();
-            if (ObjectUtils.isEmpty(titleElement) || ObjectUtils.isEmpty(contentElement)){
-                continue;
-            }
-            if (StringUtils.isEmpty(dateElement.text())){
-                continue;
-            }
-            String date = dateElement.text().substring(0,10);
-            SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
-            String currentDate = dateFormat.format(new Date());
-            if (date.equals(currentDate)){
-                String articleContent = contentElement.text();
-                String title = titleElement.text();
-                List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(articleContent,plateInfos);
-                if (!CollectionUtils.isEmpty(matchedPlateInfo)){
-                    PolicyInfo policyInfo = new PolicyInfo();
-                    policyInfo.setSource(url);
-                    policyInfo.setTargetPlate(matchedPlateInfo.stream().map(e->e.getPlateName()).collect(Collectors.joining(",")));
-                    policyInfo.setTargetPlateId(matchedPlateInfo.stream().map(e->e.getPlateId()).collect(Collectors.joining(",")));
-                    policyInfo.setTitle(title);
-                    policyInfo.setRelease_date(date);
-                    policyInfo.setPlatform(NAME);
-                    policyInfos.add(policyInfo);
+            try {
+                String pageContent = HttpRequestUtil.getRequestDirectly(url);
+                Document pageDocument = Jsoup.parse(pageContent);
+                Element titleElement = pageDocument.getElementsByTag("h1").first();
+                Element contentElement = pageDocument.getElementById("UCAP-CONTENT");
+                Element dateElement = pageDocument.getElementsByClass("pages-date").first();
+                if (ObjectUtils.isEmpty(titleElement) || ObjectUtils.isEmpty(contentElement)){
+                    continue;
                 }
+                if (StringUtils.isEmpty(dateElement.text())){
+                    continue;
+                }
+                String date = dateElement.text().substring(0,10);
+                SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
+                String currentDate = dateFormat.format(new Date());
+                if (date.equals(currentDate)){
+                    String articleContent = contentElement.text();
+                    String title = titleElement.text();
+                    List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(articleContent,plateInfos);
+                    if (!CollectionUtils.isEmpty(matchedPlateInfo)){
+                        PolicyInfo policyInfo = new PolicyInfo();
+                        policyInfo.setSource(url);
+                        policyInfo.setTargetPlate(matchedPlateInfo.stream().map(e->e.getPlateName()).collect(Collectors.joining(",")));
+                        policyInfo.setTargetPlateId(matchedPlateInfo.stream().map(e->e.getPlateId()).collect(Collectors.joining(",")));
+                        policyInfo.setTitle(title);
+                        policyInfo.setRelease_date(date);
+                        policyInfo.setPlatform(NAME);
+                        policyInfos.add(policyInfo);
+                    }
+                }
+            }catch (Exception e){
+                log.error("fetchStateCouncilService error :{}",e);
             }
+
         }
         if (!CollectionUtils.isEmpty(policyInfos)){
             policyTableDAO.batchInsertPolicyTable(policyInfos);

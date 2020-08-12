@@ -100,7 +100,7 @@ public class IndustryAndInformationTechnologyService {
                     }
                 }
             }catch (Exception e){
-                log.error("error is :{}",e);
+                log.error("fetchIndustryService error :{}",e);
             }
         }
         if (!CollectionUtils.isEmpty(policyInfos)){

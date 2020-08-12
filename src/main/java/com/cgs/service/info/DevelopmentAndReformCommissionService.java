@@ -102,40 +102,44 @@ public class DevelopmentAndReformCommissionService {
         List<PlateInfo> plateInfos = plateDAO.queryAllPlateInfo();
         List<PolicyInfo> policyInfos = new ArrayList<>();
         while (!contentQueue.isEmpty()){
-            String url = contentQueue.poll();
-            String webContentDetail = HttpRequestUtil.getRequestDirectly(url);
-            if (StringUtils.isEmpty(webContentDetail)){
-                continue;
-            }
-            Document contentDocument = Jsoup.parse(webContentDetail);
-            if (ObjectUtils.isEmpty(contentDocument)){
-                continue;
-            }
-            Element dateElement = contentDocument.getElementsByClass("time").first();
-            Element contentElement = contentDocument.getElementsByClass("TRS_Editor").first();
-            if (ObjectUtils.isEmpty(contentElement)){
-                continue;
-            }
-            String contentDetail = contentElement.text();
-            String date = dateElement.text();
-            if (StringUtils.isEmpty(contentDetail) || StringUtils.isEmpty(date)){
-                continue;
-            }
-            String finalDate = date.replaceAll("发布时间：","").replaceAll("/","-");
-            SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
-            String currentDate = dateFormat.format(new Date());
-            if ( currentDate.equals(finalDate) && !CollectionUtils.isEmpty(plateInfos)){
-                List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(contentDetail,plateInfos);
-                if (!CollectionUtils.isEmpty(matchedPlateInfo)){
-                    PolicyInfo policyInfo = new PolicyInfo();
-                    policyInfo.setSource(url);
-                    policyInfo.setTargetPlate(matchedPlateInfo.stream().map(e->e.getPlateName()).collect(Collectors.joining(",")));
-                    policyInfo.setTargetPlateId(matchedPlateInfo.stream().map(e->e.getPlateId()).collect(Collectors.joining(",")));
-                    policyInfo.setTitle(titleMap.get(url));
-                    policyInfo.setRelease_date(finalDate);
-                    policyInfo.setPlatform(NAME);
-                    policyInfos.add(policyInfo);
+            try {
+                String url = contentQueue.poll();
+                String webContentDetail = HttpRequestUtil.getRequestDirectly(url);
+                if (StringUtils.isEmpty(webContentDetail)){
+                    continue;
                 }
+                Document contentDocument = Jsoup.parse(webContentDetail);
+                if (ObjectUtils.isEmpty(contentDocument)){
+                    continue;
+                }
+                Element dateElement = contentDocument.getElementsByClass("time").first();
+                Element contentElement = contentDocument.getElementsByClass("TRS_Editor").first();
+                if (ObjectUtils.isEmpty(contentElement)){
+                    continue;
+                }
+                String contentDetail = contentElement.text();
+                String date = dateElement.text();
+                if (StringUtils.isEmpty(contentDetail) || StringUtils.isEmpty(date)){
+                    continue;
+                }
+                String finalDate = date.replaceAll("发布时间：","").replaceAll("/","-");
+                SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
+                String currentDate = dateFormat.format(new Date());
+                if ( currentDate.equals(finalDate) && !CollectionUtils.isEmpty(plateInfos)){
+                    List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(contentDetail,plateInfos);
+                    if (!CollectionUtils.isEmpty(matchedPlateInfo)){
+                        PolicyInfo policyInfo = new PolicyInfo();
+                        policyInfo.setSource(url);
+                        policyInfo.setTargetPlate(matchedPlateInfo.stream().map(e->e.getPlateName()).collect(Collectors.joining(",")));
+                        policyInfo.setTargetPlateId(matchedPlateInfo.stream().map(e->e.getPlateId()).collect(Collectors.joining(",")));
+                        policyInfo.setTitle(titleMap.get(url));
+                        policyInfo.setRelease_date(finalDate);
+                        policyInfo.setPlatform(NAME);
+                        policyInfos.add(policyInfo);
+                    }
+                }
+            }catch (Exception e){
+                log.error("fetchDevelopmentReformService error:{}",e);
             }
         }
         if (!CollectionUtils.isEmpty(policyInfos)){

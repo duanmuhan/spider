@@ -86,35 +86,39 @@ public class PartyCentralCommitteeService {
 
         while (!contentQueue.isEmpty()){
             String url = contentQueue.poll();
-            String articleContent = HttpRequestUtil.getRequestDirectlyWithEncoding(url,"GB2312");
-            Document articleDocument = Jsoup.parse(articleContent);
-            Element titleElement = articleDocument.getElementsByTag("h1").first();
-            Element contentElement = articleDocument.getElementsByClass("show_text").first();
-            Element dateElement = articleDocument.getElementsByClass("sou").first();
-            if (ObjectUtils.isEmpty(titleElement) || ObjectUtils.isEmpty(contentElement) || ObjectUtils.isEmpty(dateElement)){
-                continue;
-            }
-            String date = dateElement.text();
-            if (StringUtils.isEmpty(date)){
-                continue;
-            }
-            date = date.substring(0,10).replace("年","-").replace("月","-");
-            SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
-            String currentDate = dateFormat.format(new Date());
-            if (date.equals(currentDate)){
-                String text = contentElement.text();
-                List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(text,plateInfos);
-                if (!CollectionUtils.isEmpty(plateInfos)){
-                    PolicyInfo policyInfo = new PolicyInfo();
-                    policyInfo.setRelease_date(titleElement.text());
-                    policyInfo.setSource(url);
-                    policyInfo.setTargetPlate(matchedPlateInfo.stream().map(e->e.getPlateName()).collect(Collectors.joining(",")));
-                    policyInfo.setTargetPlateId(matchedPlateInfo.stream().map(e->e.getPlateId()).collect(Collectors.joining(",")));
-                    policyInfo.setTitle(titleElement.text());
-                    policyInfo.setRelease_date(date);
-                    policyInfo.setPlatform(NAME);
-                    policyInfos.add(policyInfo);
+            try {
+                String articleContent = HttpRequestUtil.getRequestDirectlyWithEncoding(url,"GB2312");
+                Document articleDocument = Jsoup.parse(articleContent);
+                Element titleElement = articleDocument.getElementsByTag("h1").first();
+                Element contentElement = articleDocument.getElementsByClass("show_text").first();
+                Element dateElement = articleDocument.getElementsByClass("sou").first();
+                if (ObjectUtils.isEmpty(titleElement) || ObjectUtils.isEmpty(contentElement) || ObjectUtils.isEmpty(dateElement)){
+                    continue;
                 }
+                String date = dateElement.text();
+                if (StringUtils.isEmpty(date)){
+                    continue;
+                }
+                date = date.substring(0,10).replace("年","-").replace("月","-");
+                SimpleDateFormat dateFormat = getSimpleDateFormat("yyyy-MM-dd");
+                String currentDate = dateFormat.format(new Date());
+                if (date.equals(currentDate)){
+                    String text = contentElement.text();
+                    List<PlateInfo> matchedPlateInfo = isTextContainsPlateName(text,plateInfos);
+                    if (!CollectionUtils.isEmpty(plateInfos)){
+                        PolicyInfo policyInfo = new PolicyInfo();
+                        policyInfo.setRelease_date(titleElement.text());
+                        policyInfo.setSource(url);
+                        policyInfo.setTargetPlate(matchedPlateInfo.stream().map(e->e.getPlateName()).collect(Collectors.joining(",")));
+                        policyInfo.setTargetPlateId(matchedPlateInfo.stream().map(e->e.getPlateId()).collect(Collectors.joining(",")));
+                        policyInfo.setTitle(titleElement.text());
+                        policyInfo.setRelease_date(date);
+                        policyInfo.setPlatform(NAME);
+                        policyInfos.add(policyInfo);
+                    }
+                }
+            }catch (Exception e){
+                log.error("fetchPartyCentralCommitee error:{}",e);
             }
         }
 
