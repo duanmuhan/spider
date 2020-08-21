@@ -71,11 +71,15 @@ public class StockHotSpotRankService {
                 stockHotspot.setStockName(stockItem.getName());
                 stockHotspot.setRank(Integer.valueOf(rank));
                 stockHotspot.setReleaseDate(date);
-                System.out.println(rank);
+                stockHotspotList.add(stockHotspot);
             }catch (Exception e){
                 log.error("exception is :{}",e);
             }
-            Thread.sleep(1000);
+            Thread.sleep(500);
+        }
+
+        if (!CollectionUtils.isEmpty(stockHotspotList)){
+            stockHotSpotDAO.batchInsertStockHotspotItem(stockHotspotList);
         }
     }
 
