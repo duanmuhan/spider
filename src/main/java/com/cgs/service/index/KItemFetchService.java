@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.KItemDAO;
 import com.cgs.dao.StockItemDAO;
+import com.cgs.entity.KItemDate;
 import com.cgs.entity.StockItem;
 import com.cgs.entity.index.KItem;
 import com.cgs.util.HttpRequestUtil;
@@ -16,6 +17,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,6 +47,13 @@ public class KItemFetchService {
         }
         List<StockItem> szStockList = stockMap.get("sz");
         List<StockItem> shStockList = stockMap.get("sh");
+        List<KItemDate> latestDateList = kItemDAO.queryKItemLatestDate();
+        Map<String,String> latestDateMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(latestDateList)){
+            latestDateList.stream().forEach(e->{
+                latestDateMap.put(e.getStockId(),e.getDate());
+            });
+        }
         if (!CollectionUtils.isEmpty(szStockList)){
             for (StockItem item : szStockList){
                 List<KItem> kItems = new ArrayList<>();
@@ -86,8 +95,17 @@ public class KItemFetchService {
                     kItems.add(kItem);
                 });
                 log.info("sz stock k item id is :{}",item.getStockId());
-                kItemDAO.batchInsertKItem(kItems);
-                Thread.sleep( 1000);
+                if (latestDateMap.containsKey(item.getStockId())){
+                    List<KItem> resultList = kItems.stream().filter(e->{
+                        return Integer.valueOf(e.getDate()) > Integer.valueOf(latestDateMap.get(item.getStockId()));
+                    }).collect(Collectors.toList());
+                    if (!CollectionUtils.isEmpty(resultList)){
+                        kItemDAO.batchInsertKItem(resultList);
+                    }
+                }else {
+                    kItemDAO.batchInsertKItem(kItems);
+                }
+                Thread.sleep( 500);
             }
         }
         if (!CollectionUtils.isEmpty(shStockList)){
@@ -129,8 +147,17 @@ public class KItemFetchService {
                     kItems.add(kItem);
                 }
                 log.info("sh stock k item id is :{}",item.getStockId());
-                kItemDAO.batchInsertKItem(kItems);
-                Thread.sleep(1000 * 5);
+                if (latestDateMap.containsKey(item.getStockId())){
+                    List<KItem> resultList = kItems.stream().filter(e->{
+                        return Integer.valueOf(e.getDate()) > Integer.valueOf(latestDateMap.get(item.getStockId()));
+                    }).collect(Collectors.toList());
+                    if (!CollectionUtils.isEmpty(resultList)){
+                        kItemDAO.batchInsertKItem(resultList);
+                    }
+                }else {
+                    kItemDAO.batchInsertKItem(kItems);
+                }
+                Thread.sleep(500);
             }
         }
     }
