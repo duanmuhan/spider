@@ -111,4 +111,9 @@ public class CalculateAverageService {
         return itemList;
     }
 
+    private List<KItem> calculateWeekKItem(List<KItem> list){
+        List<KItem> kItems = new ArrayList<>();
+        return kItems;
+    }
+
 }
