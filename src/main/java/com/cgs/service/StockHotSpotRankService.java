@@ -84,7 +84,7 @@ public class StockHotSpotRankService {
             }catch (Exception e){
                 log.error("exception is :{}",e);
             }
-            Thread.sleep(500);
+            Thread.sleep(1000);
         }
 
         if (!CollectionUtils.isEmpty(stockHotspotList)){
