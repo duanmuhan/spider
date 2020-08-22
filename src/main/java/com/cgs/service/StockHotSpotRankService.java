@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -61,7 +62,15 @@ public class StockHotSpotRankService {
                     continue;
                 }
                 Document document = Jsoup.parse(content);
-                Element spanElement = document.getElementById("popularity_rank").getElementsByTag("span").first();
+                Element popularRank = document.getElementById("popularity_rank");
+                if (ObjectUtils.isEmpty(popularRank)){
+                    continue;
+                }
+                Elements spanElements = popularRank.getElementsByTag("span");
+                if (ObjectUtils.isEmpty(spanElements)){
+                    continue;
+                }
+                Element spanElement = spanElements.first();
                 String rank = spanElement.text();
                 if (StringUtils.isEmpty(rank)){
                     continue;
