@@ -2,8 +2,9 @@ package com.cgs.dto;
 
 import com.cgs.entity.StockItem;
 import lombok.Data;
-
-import java.util.Date;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.springframework.util.StringUtils;
 
 @Data
 public class StockItemSzDTO {
@@ -20,7 +21,11 @@ public class StockItemSzDTO {
         StockItem stockItem = new StockItem();
         stockItem.setStockId(agdm);
         stockItem.setExchangeId("sz");
-        stockItem.setName(agjc);
+        if (!StringUtils.isEmpty(agjc)){
+            Document document = Jsoup.parse(agjc);
+            String text = document.text();
+            stockItem.setName(text);
+        }
         stockItem.setListingDate(agssrq);
         return stockItem;
     }
