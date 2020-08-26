@@ -23,6 +23,9 @@ public interface KItemDAO {
     )
     public void batchInsertKItem(List<KItem> list);
 
+    @Select("select max(date) as date,stock_id as stockId from " + TABLE_NAME + " where stock_id=#{stockId} and type=#{type} ")
+    public String queryLatestDateOfKItem(@Param("stockId") String stockId, @Param("type") Integer type);
+
     @Select("select max(date) as date,stock_id as stockId from " + TABLE_NAME + " group by stock_id ")
     public List<KItemDate> queryKItemLatestDate();
 

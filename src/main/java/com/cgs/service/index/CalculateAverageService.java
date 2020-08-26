@@ -38,7 +38,7 @@ public class CalculateAverageService {
         }
         for (String stockId : stockIds){
             log.info("start to calculate stockid:{}",stockId);
-            List<KItem> kItems = kItemDAO.queryKItemsbyStockId(stockId);
+            List<KItem> kItems = kItemDAO.queryDateKItemsbyStockId(stockId,1);
             if (!CollectionUtils.isEmpty(kItems)){
                 kItems = kItems.stream().sorted(Comparator.comparing(KItem::getDate)).collect(Collectors.toList());
                 List<AverageItem> fiveDayList = calculate5DayAverage(kItems);
