@@ -51,8 +51,8 @@ public class StockHotSpotRankService {
         }
         SimpleDateFormat simpleDateFormat = getSimpleDateFormat("yyyy-MM-dd");
         String date = simpleDateFormat.format(new Date());
-        List<StockHotspot> stockHotspotList = new ArrayList<>();
         for (StockItem stockItem : stockItemList){
+            List<StockHotspot> stockHotspotList = new ArrayList<>();
             try{
                 String url = requestUrl.replaceAll("stockId",stockItem.getStockId());
                 webDriver.get(url);
@@ -84,12 +84,10 @@ public class StockHotSpotRankService {
             }catch (Exception e){
                 log.error("exception is :{}",e);
             }
+            stockHotSpotDAO.batchInsertStockHotspotItem(stockHotspotList);
             Thread.sleep(1000);
         }
 
-        if (!CollectionUtils.isEmpty(stockHotspotList)){
-            stockHotSpotDAO.batchInsertStockHotspotItem(stockHotspotList);
-        }
     }
 
     private SimpleDateFormat getSimpleDateFormat(String datePattern){

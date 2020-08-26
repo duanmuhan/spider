@@ -90,6 +90,7 @@ public class KItemFetchService {
                     kItem.setClosePrice(Double.valueOf(itemList.get(2)));
                     kItem.setLow(Double.valueOf(itemList.get(3)));
                     kItem.setHigh(Double.valueOf(itemList.get(4)));
+                    kItem.setType(1);
                     kItem.setDealAmount(Long.valueOf(itemList.get(7)));
                     kItem.setDealCash(Double.valueOf(itemList.get(8)));
                     kItems.add(kItem);
@@ -142,6 +143,7 @@ public class KItemFetchService {
                     kItem.setHigh(Double.valueOf(kItemList.get(2)));
                     kItem.setLow(Double.valueOf(kItemList.get(3)));
                     kItem.setClosePrice(Double.valueOf(kItemList.get(4)));
+                    kItem.setType(1);
                     kItem.setDealAmount(Long.valueOf(kItemList.get(5)));
                     kItem.setStockId(item.getStockId());
                     kItems.add(kItem);
