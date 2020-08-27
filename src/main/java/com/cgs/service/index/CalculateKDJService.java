@@ -41,7 +41,7 @@ public class CalculateKDJService {
         List<KDJItem> kdjItems = new ArrayList<>();
         Map<String,KDJItem> kdjItemMap = new HashMap<>();
         for (String stockId : list){
-            List<KItem> kItems = kItemDAO.queryKItemsbyStockId(stockId);
+            List<KItem> kItems = kItemDAO.queryDateKItemsbyStockId(stockId,1);
             if (CollectionUtils.isEmpty(kItems)){
                 continue;
             }
