@@ -48,7 +48,7 @@ public class KItemCalculateService {
                 KItem kItem = new KItem();
                 List<KItem> tmpDayKItem = entry.getValue();
                 if (!StringUtils.isEmpty(latestDate)){
-                    tmpDayKItem.stream().filter(e->{
+                    tmpDayKItem = tmpDayKItem.stream().filter(e->{
                        return Integer.valueOf(e.getDate()) > Integer.valueOf(latestDate);
                     }).collect(Collectors.toList());
                 }
@@ -86,7 +86,7 @@ public class KItemCalculateService {
                 String latestDate = kItemDAO.queryLatestDateOfKItem(stockItem.getStockId(),3);
                 List<KItem> tmpMonthItem = entry.getValue();
                 if (!StringUtils.isEmpty(latestDate)){
-                    tmpMonthItem.stream().filter(e->{
+                    tmpMonthItem = tmpMonthItem.stream().filter(e->{
                         return Integer.valueOf(e.getDate()) > Integer.valueOf(latestDate);
                     }).collect(Collectors.toList());
                 }
