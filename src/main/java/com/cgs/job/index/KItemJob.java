@@ -20,9 +20,10 @@ public class KItemJob {
     @Autowired
     private KItemCalculateService kItemCalculateService;
 
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 30 15 1/1 * ? ")
     public void fetchStockData(){
         try {
+            log.info("start to fetch Stock KItem");
             kItemFetchService.fetchKItem();
             kItemCalculateService.calculateKItem();
         }catch (Exception e){
