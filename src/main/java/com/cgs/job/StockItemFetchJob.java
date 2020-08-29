@@ -12,13 +12,16 @@ import java.io.IOException;
 
 @Component
 @Configuration
+@EnableScheduling
 @Slf4j
 public class StockItemFetchJob {
 
     @Autowired
     private StockItemFetchService stockItemFetchService;
 
+    @Scheduled(cron = "0 15 10 ? * MON")
     public void fetchStockItem(){
+        log.info("start to execute fetchStockItem");
         try {
             stockItemFetchService.fetchStockList();
         }catch (Exception e){

@@ -88,34 +88,34 @@ public class StockInfoService {
         int year = calendar.get(Calendar.YEAR);
         String monthStr = month<10? String.valueOf(year).concat("0").concat(String.valueOf(month)) : String.valueOf(year).concat(String.valueOf(month));
         String date = simpleDateFormat.format(new Date());
-//        if (!CollectionUtils.isEmpty(shStockList)){
-//            for (StockItem item : shStockList){
-//                log.info("start to request stock:{}",item.getStockId());
-//                String requestUrl = stockCoreInfoShUrl.replace("fundid",item.getStockId())
-//                                                    .replace("month",monthStr)
-//                                                    .replace("inyear",String.valueOf(year))
-//                                                    .replace("searchdate",simpleDateFormat.format(new Date()))
-//                                                    .replace("currmills",String.valueOf(System.currentTimeMillis()));
-//                String referTargetUrl = referUrl.replace("companycode",item.getStockId());
-//                String result = HttpRequestUtil.getRequestWithRefer(requestUrl,referTargetUrl);
-//                if (StringUtils.isEmpty(result)){
-//                    continue;
-//                }
-//                JSONObject jsonObject = JSON.parseObject(result);
-//                List<ShStockInfoDTO> shStockInfoDTOList = JSON.parseArray(jsonObject.getString("result"),ShStockInfoDTO.class);
-//                try {
-//                    ShStockInfoDTO shStockInfoDTO = shStockInfoDTOList.stream().filter(e->{
-//                        return !StringUtils.isEmpty(e.getMaxHighPriceDate()) && date.equals(e.getMaxHighPriceDate());
-//                    }).findAny().get();
-//                    StockInfo stockInfo = convertShDtoToStockInfo(simpleDateFormat,shStockInfoDTO,item.getStockId());
-//                    stockInfos.add(stockInfo);
-//                }catch (Exception e){
-//                    log.error("fetch sh stock exception :{},{}",item.getStockId(),e);
-//                }
-//
-//                Thread.sleep(1000);
-//            }
-        //}
+        if (!CollectionUtils.isEmpty(shStockList)){
+            for (StockItem item : shStockList){
+                log.info("start to request stock:{}",item.getStockId());
+                String requestUrl = stockCoreInfoShUrl.replace("fundid",item.getStockId())
+                                                    .replace("month",monthStr)
+                                                    .replace("inyear",String.valueOf(year))
+                                                    .replace("searchdate",simpleDateFormat.format(new Date()))
+                                                    .replace("currmills",String.valueOf(System.currentTimeMillis()));
+                String referTargetUrl = referUrl.replace("companycode",item.getStockId());
+                String result = HttpRequestUtil.getRequestWithRefer(requestUrl,referTargetUrl);
+                if (StringUtils.isEmpty(result)){
+                    continue;
+                }
+                JSONObject jsonObject = JSON.parseObject(result);
+                List<ShStockInfoDTO> shStockInfoDTOList = JSON.parseArray(jsonObject.getString("result"),ShStockInfoDTO.class);
+                try {
+                    ShStockInfoDTO shStockInfoDTO = shStockInfoDTOList.stream().filter(e->{
+                        return !StringUtils.isEmpty(e.getMaxHighPriceDate()) && date.equals(e.getMaxHighPriceDate());
+                    }).findAny().get();
+                    StockInfo stockInfo = convertShDtoToStockInfo(simpleDateFormat,shStockInfoDTO,item.getStockId());
+                    stockInfos.add(stockInfo);
+                }catch (Exception e){
+                    log.error("fetch sh stock exception :{},{}",item.getStockId(),e);
+                }
+
+                Thread.sleep(1000);
+            }
+        }
         stockInfoDAO.batchInsertStockInfo(stockInfos);
     }
 
