@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class IssuanceRelatedFetchJob {
 
-    @Scheduled(cron = "0/5 * * * * ?")
     public void fetchTestJob(){
         log.info("test fetchTestJob");
     }
