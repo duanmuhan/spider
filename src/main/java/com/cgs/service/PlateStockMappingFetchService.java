@@ -78,6 +78,7 @@ public class PlateStockMappingFetchService {
                 pageNo = pageNo + 1;
                 Thread.sleep(5 * 1000);
             }
+            stockPlateInfoMappingDAO.deleteStockPlateInfoMappingDAO();
             stockPlateInfoMappingDAO.batchInsertStockPlateInfoMapping(plateInfoMappings);
         }
     }

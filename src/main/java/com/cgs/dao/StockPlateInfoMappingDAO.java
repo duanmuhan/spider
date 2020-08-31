@@ -30,6 +30,9 @@ public interface StockPlateInfoMappingDAO {
             )
     public void batchInsertStockPlateInfoMapping(List<StockPlateInfoMapping> list);
 
+    @Delete("delete from " + TABLE_NAME)
+    public void  deleteStockPlateInfoMappingDAO();
+
     @Select(" select * from " + TABLE_NAME + " where stock_id = #{stockId}")
     public List<StockPlateInfoMapping> queryPlateInfoByStockId(@Param("stockId") String stockId);
 
