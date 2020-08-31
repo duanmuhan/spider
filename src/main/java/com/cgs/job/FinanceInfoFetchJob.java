@@ -17,6 +17,7 @@ public class FinanceInfoFetchJob {
     @Autowired
     private FinanceInfoFetchService financeInfoFetchService;
 
+    @Scheduled(cron = "0 30 19 1/1 * ? ")
     public void fetchFinanceInfo(){
         log.info("start to fetch finance info");
         try {
