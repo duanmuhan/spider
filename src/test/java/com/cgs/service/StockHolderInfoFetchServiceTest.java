@@ -14,7 +14,7 @@ public class StockHolderInfoFetchServiceTest {
     private StockHolderInfoFetchService stockHolderInfoFetchService;
 
     @Test
-    public void testKItemService(){
+    public void testFetchStockHolderInfo(){
         try {
             stockHolderInfoFetchService.fetchStockHolderInfo();
         } catch (Exception e) {

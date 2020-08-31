@@ -73,7 +73,13 @@ public class StockHolderInfoFetchService {
                             return stockHolder;
                         }).collect(Collectors.toList());
                         try {
-                            stockHolderDAO.batchInsertStockHolder(tmpList);
+                            List<StockHolder> originalList = stockHolderDAO.queryStockHolderByStockId(stockId);
+                            if (!CollectionUtils.isEmpty(originalList)){
+                                tmpList.removeAll(originalList);
+                            }
+                            if (!CollectionUtils.isEmpty(tmpList)){
+                                stockHolderDAO.batchInsertStockHolder(tmpList);
+                            }
                         }catch (Exception exception){
                             log.error( "exception while excute batchInsertStockHolder " +JSONObject.toJSONString(tmpList) +  stockHolderStr + " :{}",exception);
                         }
@@ -99,7 +105,11 @@ public class StockHolderInfoFetchService {
                                 return stockHolderTopTen;
                             }).collect(Collectors.toList());
                             try {
-                                stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
+
+                                List<StockHolderTopTen> stockHolders = stockHolderTopTenDAO.queryStockHolder(stockId,outDTOList.get(0).getRq());
+                                if (CollectionUtils.isEmpty(stockHolders)){
+                                    stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
+                                }
                             }catch (Exception exception){
                                 log.error( "exception while excute batchInsertStockHolderTopTen " +JSONObject.toJSONString(list) + " " + stockHolderTopTenStr + " :{}",exception);
                             }
@@ -121,16 +131,16 @@ public class StockHolderInfoFetchService {
                             stockHolderComponent.setReleaseDate(e.getListingDate());
                             return stockHolderComponent;
                         }).collect(Collectors.toList());
-                        try {
-                            stockHolderComponentDAO.batchInsertStockHolderComponent(list);
-                        }catch (Exception exception){
-                            log.error( "exception while excute batchInsertStockHolderComponent " +JSONObject.toJSONString(list) + " :{}",exception);
-                        }
+//                        try {
+//                            stockHolderComponentDAO.batchInsertStockHolderComponent(list);
+//                        }catch (Exception exception){
+//                            log.error( "exception while excute batchInsertStockHolderComponent " +JSONObject.toJSONString(list) + " :{}",exception);
+//                        }
                     }
                 }
             }
             try {
-                Thread.sleep(3 * 1000);
+                Thread.sleep( 1000);
             } catch (InterruptedException ex) {
                 log.error("StockHolderInfoFetchService-fetchStockHolderInfo error:{}",e);
             }
