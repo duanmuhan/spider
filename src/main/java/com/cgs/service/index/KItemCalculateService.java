@@ -52,6 +52,9 @@ public class KItemCalculateService {
                        return Integer.valueOf(e.getDate()) > Integer.valueOf(latestDate);
                     }).collect(Collectors.toList());
                 }
+                if (CollectionUtils.isEmpty(tmpDayKItem)){
+                    continue;
+                }
                 kItem.setOpenPrice(tmpDayKItem.get(0).getOpenPrice());
                 kItem.setClosePrice(tmpDayKItem.get(tmpDayKItem.size()-1).getClosePrice());
                 kItem.setDate(entry.getKey());

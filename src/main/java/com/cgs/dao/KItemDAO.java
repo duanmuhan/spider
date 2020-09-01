@@ -29,6 +29,8 @@ public interface KItemDAO {
     @Select("select max(date) as date,stock_id as stockId from " + TABLE_NAME + " group by stock_id ")
     public List<KItemDate> queryKItemLatestDate();
 
+    public void batchDeleteKItemByDate(List<String> list);
+
     @Insert(" insert into " + TABLE_NAME + "(" + COLUMNS + ")" + "values (#{item.stockId}, #{item.openPrice}," +
             " #{item.closePrice}, #{item.high}, #{item.low}, #{item.dealAmount}, #{item.date})")
     public void insertKItem(@Param("item") KItem item);
