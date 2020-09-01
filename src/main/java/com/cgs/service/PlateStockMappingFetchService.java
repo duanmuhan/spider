@@ -42,10 +42,10 @@ public class PlateStockMappingFetchService {
             return;
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        List<StockPlateInfoMapping> plateInfoMappings = new ArrayList<>();
         for (PlateInfo plateInfo : plateInfos){
             int pageNo = 1;
             int pageSize = 100;
-            List<StockPlateInfoMapping> plateInfoMappings = new ArrayList<>();
             while (true){
                 String requestUrl = plateInfoMappingFetchUrl.replace("pageno",String.valueOf(pageNo))
                         .replace("pagesize",String.valueOf(pageSize)).replace("plateid",plateInfo.getPlateId())
@@ -78,8 +78,8 @@ public class PlateStockMappingFetchService {
                 pageNo = pageNo + 1;
                 Thread.sleep(5 * 1000);
             }
-            stockPlateInfoMappingDAO.deleteStockPlateInfoMappingDAO();
-            stockPlateInfoMappingDAO.batchInsertStockPlateInfoMapping(plateInfoMappings);
         }
+        stockPlateInfoMappingDAO.deleteStockPlateInfoMappingDAO();
+        stockPlateInfoMappingDAO.batchInsertStockPlateInfoMapping(plateInfoMappings);
     }
 }
