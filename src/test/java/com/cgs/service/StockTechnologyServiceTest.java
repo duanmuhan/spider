@@ -14,7 +14,7 @@ public class StockTechnologyServiceTest {
     private StockTechnologyService stockTechnologyService;
 
     @Test
-    public void testFetchStockItem(){
+    public void testFetchStockTechnologyInfo(){
         try {
             stockTechnologyService.fetchStockTechnologyInfo();
         } catch (Exception e) {

@@ -108,6 +108,7 @@ public class StockHolderInfoFetchService {
 
                                 List<StockHolderTopTen> stockHolders = stockHolderTopTenDAO.queryStockHolder(stockId,outDTOList.get(0).getRq());
                                 if (CollectionUtils.isEmpty(stockHolders)){
+                                    list.removeAll(stockHolders);
                                     stockHolderTopTenDAO.batchInsertStockHolderTopTen(list);
                                 }
                             }catch (Exception exception){
