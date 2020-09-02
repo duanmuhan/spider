@@ -16,6 +16,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -71,9 +74,12 @@ public class StockAchievementService {
         if (!CollectionUtils.isEmpty(stockAchievements)){
             List<StockAchievement> stockAchievementList = stockAchievementDAO.batchQueryStockAchievementList();
             if (!CollectionUtils.isEmpty(stockAchievementList)){
-                stockAchievements.removeAll(stockAchievementList);
+                Map<String,StockAchievement> stockAchievementMap = stockAchievementList.stream().collect(Collectors.toMap(StockAchievement::getStockId,Function.identity()));
+                stockAchievements = stockAchievements.stream().filter(e->{
+                    return !(stockAchievementMap.containsKey(e.getStockId()) && stockAchievementMap.get(e.getStockId()).getReleaseDate().equals(e.getReleaseDate()));
+                }).collect(Collectors.toList());
             }
-            if (CollectionUtils.isEmpty(stockAchievements)){
+            if (!CollectionUtils.isEmpty(stockAchievements)){
                 stockAchievementDAO.batchInsertStockAchievement(stockAchievements);
             }
         }
