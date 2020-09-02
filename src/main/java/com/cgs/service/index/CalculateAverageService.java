@@ -42,13 +42,7 @@ public class CalculateAverageService {
             if (!CollectionUtils.isEmpty(kItems)){
                 kItems = kItems.stream().sorted(Comparator.comparing(KItem::getDate)).collect(Collectors.toList());
                 List<AverageItem> fiveDayList = calculate5DayAverage(kItems);
-//                List<AverageItem> originFiveDayList = averageDAO.queryAverageItemByStockId(stockId,AverageType.FIVE_DAYS);
-                List<AverageItem> tenDayList = calculate10DayAverage(kItems);
-                List<AverageItem> originTendayList = averageDAO.queryAverageItemByStockId(stockId,AverageType.TEN_DAYS);
-//                fiveDayList.removeAll(originFiveDayList);
-                tenDayList.removeAll(originTendayList);
-//                averageDAO.batchInsertAverageItem(fiveDayList);
-                averageDAO.batchInsertAverageItem(tenDayList);
+                averageDAO.batchInsertAverageItem(fiveDayList);
             }
         }
 
