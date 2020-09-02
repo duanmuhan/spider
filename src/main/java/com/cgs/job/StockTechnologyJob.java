@@ -17,7 +17,7 @@ public class StockTechnologyJob {
     @Autowired
     private StockTechnologyService stockTechnologyService;
 
-    @Scheduled(cron = "0 0 23 * * ?")
+    @Scheduled(cron = "0 0 19 * * ?")
     public void fetchStockTechnologyInfo(){
         log.info("start to execute fetchStockTechnologyInfo");
         try {
