@@ -30,38 +30,42 @@ public class StockAchievementService {
         int startIndex = 1;
         List<StockAchievement> stockAchievements = new ArrayList<>();
         while (true){
-            String requestUrl = url.replace("pageNo",String.valueOf(startIndex));
-            String content = HttpRequestUtil.getRequestDirectly(requestUrl);
-            if (StringUtils.isEmpty(content)){
-                break;
+            try {
+                String requestUrl = url.replace("pageNo",String.valueOf(startIndex));
+                String content = HttpRequestUtil.getRequestDirectly(requestUrl);
+                if (StringUtils.isEmpty(content)){
+                    break;
+                }
+                Document document = Jsoup.parse(content);
+                Elements trElements = document.getElementsByTag("tbody").first().getElementsByTag("tr");
+                if (ObjectUtils.isEmpty(trElements)){
+                    break;
+                }
+                log.info("start to request startIndex : {}",startIndex);
+                for (Element element : trElements){
+                    Elements tdElements = element.getElementsByTag("td");
+                    String stockId = tdElements.get(1).text();
+                    String stockName = tdElements.get(2).text();
+                    String achievementType = tdElements.get(3).text();
+                    String achievementTitle = tdElements.get(4).text();
+                    String profileChangeRate = tdElements.get(5).text();
+                    String profileLastYear = tdElements.get(6).text();
+                    String releaseDate = tdElements.get(7).text();
+
+                    StockAchievement stockAchievement = new StockAchievement();
+                    stockAchievement.setStockId(stockId);
+                    stockAchievement.setStockName(stockName);
+                    stockAchievement.setAchievementType(achievementType);
+                    stockAchievement.setAchievementTitle(achievementTitle);
+                    stockAchievement.setProfileChangeRate((StringUtils.isEmpty(profileChangeRate) || "-".equals(profileChangeRate))? 0:Double.valueOf(profileChangeRate));
+                    stockAchievement.setProfileLastYear(profileLastYear);
+                    stockAchievement.setReleaseDate(releaseDate);
+                    stockAchievements.add(stockAchievement);
+                }
+            }catch (Exception e){
+                log.error("error in fetchStockAchievement :{}",e);
             }
             startIndex = startIndex + 1;
-            Document document = Jsoup.parse(content);
-            Elements trElements = document.getElementsByTag("tbody").first().getElementsByTag("tr");
-            if (ObjectUtils.isEmpty(trElements)){
-                break;
-            }
-            log.info("start to request startIndex : {}",startIndex);
-            for (Element element : trElements){
-                Elements tdElements = element.getElementsByTag("td");
-                String stockId = tdElements.get(1).text();
-                String stockName = tdElements.get(2).text();
-                String achievementType = tdElements.get(3).text();
-                String achievementTitle = tdElements.get(4).text();
-                String profileChangeRate = tdElements.get(5).text();
-                String profileLastYear = tdElements.get(6).text();
-                String releaseDate = tdElements.get(7).text();
-
-                StockAchievement stockAchievement = new StockAchievement();
-                stockAchievement.setStockId(stockId);
-                stockAchievement.setStockName(stockName);
-                stockAchievement.setAchievementType(achievementType);
-                stockAchievement.setAchievementTitle(achievementTitle);
-                stockAchievement.setProfileChangeRate((StringUtils.isEmpty(profileChangeRate) || "-".equals(profileChangeRate))? 0:Double.valueOf(profileChangeRate));
-                stockAchievement.setProfileLastYear(profileLastYear);
-                stockAchievement.setReleaseDate(releaseDate);
-                stockAchievements.add(stockAchievement);
-            }
             Thread.sleep(1000);
         }
         if (!CollectionUtils.isEmpty(stockAchievements)){
