@@ -15,7 +15,7 @@ public class KItemCalculateServiceTest {
     private KItemCalculateService kItemCalculateService;
 
     @Test
-    public void testKItemService(){
+    public void testCalculateKItem(){
         try {
             kItemCalculateService.calculateKItem();
         } catch (Exception e) {
