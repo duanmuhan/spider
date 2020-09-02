@@ -64,6 +64,8 @@ public class StockTechnologyService {
         log.info("os name :{}",osName);
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
         WebDriver webDriver = new ChromeDriver(options);
         webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
