@@ -51,7 +51,17 @@ public class StockTechnologyService {
     private static ThreadLocal<SimpleDateFormat> tl = new ThreadLocal<>();
 
     public void fetchStockTechnologyInfo() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver","C:Program Files (x86)//Google//Chrome//Application//chromedriver.exe");
+        String osName =  System.getProperty("os.name");
+        if (StringUtils.isEmpty(osName)){
+            return;
+        }
+        osName = osName.toLowerCase();
+        if (osName.contains("windows")){
+            System.setProperty("webdriver.chrome.driver","C:Program Files (x86)//Google//Chrome//Application//chromedriver.exe");
+        }else if (osName.contains("linux") || osName.contains("ubuntu")){
+            System.setProperty("webdriver.chrome.driver","/usr/bin/chromedriver");
+        }
+        log.info("os name :{}",osName);
         ChromeOptions options = new ChromeOptions();
         options.setHeadless(true);
         WebDriver webDriver = new ChromeDriver(options);
