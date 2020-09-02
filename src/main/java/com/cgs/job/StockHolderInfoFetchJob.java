@@ -17,7 +17,7 @@ public class StockHolderInfoFetchJob {
     @Autowired
     private StockHolderInfoFetchService stockHolderInfoFetchService;
 
-    @Scheduled(cron = "0 15 20 ? * WED")
+    @Scheduled(cron = "0 0 17 * * ?")
     public void fetchStockHolder(){
         try {
             stockHolderInfoFetchService.fetchStockHolderInfo();
