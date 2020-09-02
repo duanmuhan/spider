@@ -26,7 +26,7 @@ public class StockAchievementService {
     private StockAchievementDAO stockAchievementDAO;
 
     public void fetchStockAchievement() throws InterruptedException {
-        String url = "http://data.10jqka.com.cn/ajax/yjyg/date/2020-06-30/board/ALL/field/enddate/order/desc/page/pageNo/ajax/1/free/1/";
+        String url = "http://data.10jqka.com.cn/ajax/yjyg/date/2020-09-30/board/ALL/field/enddate/order/desc/page/1/ajax/1/free/1/";
         int startIndex = 1;
         List<StockAchievement> stockAchievements = new ArrayList<>();
         while (true){
