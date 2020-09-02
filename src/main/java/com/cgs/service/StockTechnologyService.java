@@ -127,35 +127,35 @@ public class StockTechnologyService {
             Thread.sleep(1000);
         }
 
-//        for (StockItem stockItem : stockItemList){
-//            log.info("fetch stock score stock id ：{}",stockItem.getStockId());
-//            try {
-//                String requestUrl = stockScoreUrl.replace("stockId",stockItem.getStockId());
-//                webDriver.get(requestUrl);
-//                String content = webDriver.getPageSource();
-//                if (StringUtils.isEmpty(content)){
-//                    continue;
-//                }
-//                Document document = Jsoup.parse(content);
-//                String scoreContent = document.text();
-//                if (ObjectUtils.isEmpty(scoreContent)){
-//                    continue;
-//                }
-//                JSONObject scoreObject = JSON.parseObject(scoreContent);
-//                JSONObject scoreDataObject = scoreObject.getJSONObject("data").getJSONObject("data").getJSONObject("result");
-//                Map<String,String> scoreDataMap = (Map<String, String>) JSON.parse(scoreDataObject.toJSONString());
-//                StockTechnologyScore stockTechnologyScore = new StockTechnologyScore();
-//                stockTechnologyScore.setScore(Double.valueOf(scoreDataMap.get("_score")));
-//                stockTechnologyScore.setStockId(scoreDataMap.get("_code"));
-//                stockTechnologyScore.setStockName(scoreDataMap.get("_name"));
-//                stockTechnologyScore.setReleaseDate(date);
-//                stockTechnologyScoreList.add(stockTechnologyScore);
-//                Thread.sleep(1000);
-//            }catch (Exception e){
-//                log.error("fetch stock score exception:{}",e);
-//            }
-//
-//        }
+        for (StockItem stockItem : stockItemList){
+            log.info("fetch stock score stock id ：{}",stockItem.getStockId());
+            try {
+                String requestUrl = stockScoreUrl.replace("stockId",stockItem.getStockId());
+                webDriver.get(requestUrl);
+                String content = webDriver.getPageSource();
+                if (StringUtils.isEmpty(content)){
+                    continue;
+                }
+                Document document = Jsoup.parse(content);
+                String scoreContent = document.text();
+                if (ObjectUtils.isEmpty(scoreContent)){
+                    continue;
+                }
+                JSONObject scoreObject = JSON.parseObject(scoreContent);
+                JSONObject scoreDataObject = scoreObject.getJSONObject("data").getJSONObject("data").getJSONObject("result");
+                Map<String,String> scoreDataMap = (Map<String, String>) JSON.parse(scoreDataObject.toJSONString());
+                StockTechnologyScore stockTechnologyScore = new StockTechnologyScore();
+                stockTechnologyScore.setScore(Double.valueOf(scoreDataMap.get("_score")));
+                stockTechnologyScore.setStockId(scoreDataMap.get("_code"));
+                stockTechnologyScore.setStockName(scoreDataMap.get("_name"));
+                stockTechnologyScore.setReleaseDate(date);
+                stockTechnologyScoreList.add(stockTechnologyScore);
+                Thread.sleep(1000);
+            }catch (Exception e){
+                log.error("fetch stock score exception:{}",e);
+            }
+
+        }
         if (!CollectionUtils.isEmpty(stockTechnologyScoreList)){
             stockTechnologyScoreDAO.batchInsertStockTechnologyScore(stockTechnologyScoreList);
         }
