@@ -69,7 +69,9 @@ public class StockAchievementService {
             if (!CollectionUtils.isEmpty(stockAchievementList)){
                 stockAchievements.removeAll(stockAchievementList);
             }
-            stockAchievementDAO.batchInsertStockAchievement(stockAchievements);
+            if (CollectionUtils.isEmpty(stockAchievements)){
+                stockAchievementDAO.batchInsertStockAchievement(stockAchievements);
+            }
         }
 
     }
