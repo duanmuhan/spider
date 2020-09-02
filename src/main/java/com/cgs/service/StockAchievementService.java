@@ -66,7 +66,9 @@ public class StockAchievementService {
         }
         if (!CollectionUtils.isEmpty(stockAchievements)){
             List<StockAchievement> stockAchievementList = stockAchievementDAO.batchQueryStockAchievementList();
-            stockAchievements.removeAll(stockAchievementList);
+            if (!CollectionUtils.isEmpty(stockAchievementList)){
+                stockAchievements.removeAll(stockAchievementList);
+            }
             stockAchievementDAO.batchInsertStockAchievement(stockAchievements);
         }
 
