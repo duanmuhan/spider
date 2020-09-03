@@ -28,7 +28,7 @@ public class CalculateAverageService {
     @Autowired
     private StockItemDAO stockItemDAO;
 
-    public void  calculateAverage(){
+    public void  calculateAverage() throws InterruptedException {
         List<StockItem> stockItems = stockItemDAO.queryAllStockList();
         if (CollectionUtils.isEmpty(stockItems)){
             return;
@@ -38,35 +38,50 @@ public class CalculateAverageService {
             return;
         }
         for (String stockId : stockIds){
-            log.info("start to calculate stockid:{}",stockId);
+            log.info("start to calculate stockId:{}",stockId);
             List<KItem> kItems = kItemDAO.queryDateKItemsbyStockId(stockId,1);
             if (!CollectionUtils.isEmpty(kItems)){
                 kItems = kItems.stream().sorted(Comparator.comparing(KItem::getDate)).collect(Collectors.toList());
                 List<AverageItem> fiveDayList = calculate5DayAverage(kItems);
-                averageDAO.batchInsertAverageItem(fiveDayList);
+                Integer fiveDate = averageDAO.queryAverageLatestDateByStockId(stockId,AverageType.FIVE_DAYS);
+                if (!ObjectUtils.isEmpty(fiveDate)){
+                    fiveDayList = fiveDayList.stream().filter(e->{
+                        return Integer.valueOf(e.getDate()) > fiveDate;
+                    }).collect(Collectors.toList());
+                    if (!CollectionUtils.isEmpty(fiveDayList)){
+                        averageDAO.batchInsertAverageItem(fiveDayList);
+                    }
+                }else {
+                    averageDAO.batchInsertAverageItem(fiveDayList);
+                }
 
+                log.info("start to calculate  ten stockId:{}",stockId);
                 List<AverageItem> tenDaysList = calculate10DayAverage(kItems);
                 Integer tenDate = averageDAO.queryAverageLatestDateByStockId(stockId,AverageType.TEN_DAYS);
                 if (!ObjectUtils.isEmpty(tenDate)){
                     tenDaysList = tenDaysList.stream().filter(e->{
-                        return Integer.valueOf(e.getDate()) >= tenDate;
+                        return Integer.valueOf(e.getDate()) > tenDate;
                     }).collect(Collectors.toList());
                     if (!CollectionUtils.isEmpty(tenDaysList)){
-                        averageDAO.deleteAverageItemByDateAndType(stockId,AverageType.TEN_DAYS,tenDate);
                         averageDAO.batchInsertAverageItem(tenDaysList);
                     }
+                }else {
+                    averageDAO.batchInsertAverageItem(tenDaysList);
                 }
+                log.info("start to calculate  twenty stockId:{}",stockId);
                 List<AverageItem> twentiesDaysList = calculate20DayAverage(kItems);
                 Integer twentiesDate = averageDAO.queryAverageLatestDateByStockId(stockId,AverageType.TWENTY_DAYS);
                 if (!ObjectUtils.isEmpty(twentiesDate)){
                     twentiesDaysList = twentiesDaysList.stream().filter(e->{
-                        return Integer.valueOf(e.getDate()) >= twentiesDate;
+                        return Integer.valueOf(e.getDate()) > twentiesDate;
                     }).collect(Collectors.toList());
                     if (!CollectionUtils.isEmpty(twentiesDaysList)){
-                        averageDAO.deleteAverageItemByDateAndType(stockId,AverageType.TWENTY_DAYS,twentiesDate);
                         averageDAO.batchInsertAverageItem(twentiesDaysList);
                     }
+                }else {
+                    averageDAO.batchInsertAverageItem(twentiesDaysList);
                 }
+                log.info("start to calculate  sixties stockId:{}",stockId);
                 List<AverageItem> sixtiesDaysList = calculate60DayAverage(kItems);
                 Integer sixtiesDate = averageDAO.queryAverageLatestDateByStockId(stockId,AverageType.SIXTIES_DAYS);
                 if (!ObjectUtils.isEmpty(sixtiesDate)){
@@ -74,22 +89,26 @@ public class CalculateAverageService {
                         return Integer.valueOf(e.getDate()) >= sixtiesDate;
                     }).collect(Collectors.toList());
                     if (!CollectionUtils.isEmpty(sixtiesDaysList)){
-                        averageDAO.deleteAverageItemByDateAndType(stockId,AverageType.SIXTIES_DAYS,sixtiesDate);
                         averageDAO.batchInsertAverageItem(sixtiesDaysList);
                     }
+                }else {
+                    averageDAO.batchInsertAverageItem(sixtiesDaysList);
                 }
+                log.info("start to calculate  oneHundredTwentiesDays stockId:{}",stockId);
                 List<AverageItem> oneHundredTwentiesDaysList = calculate120DayAverage(kItems);
                 Integer oneHundredTwentiesDay = averageDAO.queryAverageLatestDateByStockId(stockId,AverageType.ONE_HUNDRED_TWENTY_DAYS);
                 if (!ObjectUtils.isEmpty(oneHundredTwentiesDay)){
                     oneHundredTwentiesDaysList = oneHundredTwentiesDaysList.stream().filter(e->{
-                        return Integer.valueOf(e.getDate()) >= oneHundredTwentiesDay;
+                        return Integer.valueOf(e.getDate()) > oneHundredTwentiesDay;
                     }).collect(Collectors.toList());
                     if (!CollectionUtils.isEmpty(oneHundredTwentiesDaysList)){
-                        averageDAO.deleteAverageItemByDateAndType(stockId,AverageType.ONE_HUNDRED_TWENTY_DAYS,oneHundredTwentiesDay);
                         averageDAO.batchInsertAverageItem(oneHundredTwentiesDaysList);
                     }
+                }else {
+                    averageDAO.batchInsertAverageItem(oneHundredTwentiesDaysList);
                 }
             }
+            Thread.sleep(500);
         }
 
     }

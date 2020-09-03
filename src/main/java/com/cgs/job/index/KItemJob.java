@@ -1,5 +1,6 @@
 package com.cgs.job.index;
 
+import com.cgs.service.index.CalculateAverageService;
 import com.cgs.service.index.KItemCalculateService;
 import com.cgs.service.index.KItemFetchService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,8 @@ public class KItemJob {
     private KItemFetchService kItemFetchService;
     @Autowired
     private KItemCalculateService kItemCalculateService;
+    @Autowired
+    private CalculateAverageService calculateAverageService;
 
     @Scheduled(cron = "0 30 17 * * ?")
     public void fetchStockData(){
@@ -26,6 +29,7 @@ public class KItemJob {
             log.info("start to fetch Stock KItem");
             kItemFetchService.fetchKItem();
             kItemCalculateService.calculateKItem();
+            calculateAverageService.calculateAverage();
         }catch (Exception e){
             log.error("error while fetch fetchStockData:{} ",e);
         }

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public interface AverageDAO {
     public void batchInsertAverageItem(List<AverageItem> averageItems);
 
     @Select(" select max(date) as date from " + TABLE_NAME + "where stock_id=#{stockId} and type=#{type}")
+    @Cacheable(value = "kitem:queryAverageLatestDateByStockId",key = "#stockId + '-' + #type")
     public Integer queryAverageLatestDateByStockId(String stockId,Integer type);
 
     @Delete(" delete from " + TABLE_NAME + " where stock_id=#{stockId} and type=#{type} and date=#{date} ")

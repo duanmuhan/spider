@@ -16,6 +16,10 @@ public class CalculateAverageServiceTest {
 
     @Test
     public void testCalculateAverageService(){
-        calculateAverageService.calculateAverage();
+        try {
+            calculateAverageService.calculateAverage();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
