@@ -17,7 +17,7 @@ public class StockAchievementJob {
     @Autowired
     private StockAchievementService stockAchievementService;
 
-    @Scheduled(cron = "0 0 0/6 * * ? ")
+    @Scheduled(cron = "0 0 0/6 * * ?")
     public void fetchStockAchievement(){
         log.info("start to execute fetchStockAchievement");
         try {
