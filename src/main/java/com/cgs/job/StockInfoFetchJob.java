@@ -17,7 +17,7 @@ public class StockInfoFetchJob {
     @Autowired
     private StockInfoService stockInfoService;
 
-    @Scheduled(cron = "0 30 17 1/1 * ? ")
+    @Scheduled(cron = "0 30 17 1/1 * ?")
     public void fetchStockData(){
         log.info("start to execute ");
         try {

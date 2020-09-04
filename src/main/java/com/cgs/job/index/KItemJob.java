@@ -1,5 +1,6 @@
 package com.cgs.job.index;
 
+import com.cgs.service.StockMoodIndexFetchService;
 import com.cgs.service.index.CalculateAverageService;
 import com.cgs.service.index.KItemCalculateService;
 import com.cgs.service.index.KItemFetchService;
@@ -22,6 +23,8 @@ public class KItemJob {
     private KItemCalculateService kItemCalculateService;
     @Autowired
     private CalculateAverageService calculateAverageService;
+    @Autowired
+    private StockMoodIndexFetchService stockMoodIndexFetchService;
 
     @Scheduled(cron = "0 30 17 * * ?")
     public void fetchStockData(){
@@ -29,7 +32,8 @@ public class KItemJob {
             log.info("start to fetch Stock KItem");
             kItemFetchService.fetchKItem();
             kItemCalculateService.calculateKItem();
-            calculateAverageService.calculateAverage();
+            //calculateAverageService.calculateAverage();
+            stockMoodIndexFetchService.fetchStockMoodIndexService();
         }catch (Exception e){
             log.error("error while fetch fetchStockData:{} ",e);
         }
