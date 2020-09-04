@@ -6,7 +6,7 @@ import lombok.Data;
 public class StockMoodIndex {
 
     private String stockIncreaseRate;
-    private String stockPoint;
+    private Double stockPoint;
     private Integer stockTotalCount;
     private Integer stockIncreaseCount;
     private String releaseDate;

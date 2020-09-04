@@ -3,6 +3,7 @@ package com.cgs.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cgs.dao.KItemDAO;
+import com.cgs.dao.StockItemDAO;
 import com.cgs.dao.StockMoodIndexFetchDAO;
 import com.cgs.entity.StockMoodIndex;
 import com.cgs.entity.index.KItem;
@@ -32,6 +33,8 @@ public class StockMoodIndexFetchService {
     private KItemDAO kItemDAO;
     @Autowired
     private StockMoodIndexFetchDAO stockMoodIndexFetchDAO;
+    @Autowired
+    private StockItemDAO stockItemDAO;
 
     public void fetchStockMoodIndexService(){
         long timestamp = System.currentTimeMillis();
@@ -77,13 +80,16 @@ public class StockMoodIndexFetchService {
                 return Integer.valueOf(e.getDate()) > Integer.valueOf(date);
             }).collect(Collectors.toList());
         }
+        kItems = kItems.stream().filter(e->{
+            return Integer.valueOf(e.getDate()) > 20200601;
+        }).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(kItems)){
             return;
         }
-        kItemDAO.batchInsertKItem(kItems);
-        String releaseDate = stockMoodIndexFetchDAO.queryLatestDateOfStockMoodIndex();
-        int increaseCount = 0;
+        int stockTotalCount = stockItemDAO.currentStockCount();
+        List<StockMoodIndex> stockMoodIndexList = new ArrayList<>();
         for (KItem kItem : kItems){
+            log.info("fetchStockMoodIndexService: {}",kItem.getDate());
             List<KItem> kItemList = kItemDAO.querySecondLatestDateOfTargetDate(kItem.getDate());
             if (CollectionUtils.isEmpty(kItemList)){
                 continue;
@@ -93,21 +99,28 @@ public class StockMoodIndexFetchService {
                 continue;
             }
             Map<String,KItem> secondLatestMap = kItemList.stream().collect(Collectors.toMap(KItem::getStockId, Function.identity()));
+            int increaseCount = 0;
             for (KItem targetKItem : targetDateKItem){
-                if (secondLatestMap.containsKey(targetKItem.getStockId())){
+                if (!secondLatestMap.containsKey(targetKItem.getStockId())){
                     continue;
                 }
                 KItem secondKItem = secondLatestMap.get(targetKItem.getStockId());
-                double rate = secondKItem.getClosePrice() / targetKItem.getClosePrice();
-                if (rate >= 0.95){
+                double rate = (targetKItem.getClosePrice() - secondKItem.getClosePrice()) / secondKItem.getClosePrice();
+                if (rate >= 0.098){
                     increaseCount = increaseCount + 1;
-
                 }
             }
             StockMoodIndex stockMoodIndex = new StockMoodIndex();
             stockMoodIndex.setStockIncreaseCount(increaseCount);
             stockMoodIndex.setReleaseDate(kItem.getDate());
-
+            stockMoodIndex.setStockPoint(kItem.getClosePrice());
+            stockMoodIndex.setStockIncreaseRate(String.valueOf(increaseCount/stockTotalCount));
+            stockMoodIndex.setStockTotalCount(stockTotalCount);
+            stockMoodIndexList.add(stockMoodIndex);
+        }
+        kItemDAO.batchInsertKItem(kItems);
+        if (!CollectionUtils.isEmpty(stockMoodIndexList)){
+            stockMoodIndexFetchDAO.batchInsertStockMoodIndexItem(stockMoodIndexList);
         }
     }
 }

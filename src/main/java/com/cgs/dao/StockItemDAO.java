@@ -24,6 +24,9 @@ public interface StockItemDAO {
             )
     public void batchInsertStockItem(List<StockItem> list);
 
+    @Select(" select count(*) from " + TABLE_NAME)
+    Integer currentStockCount();
+
     @Insert("insert into " + TABLE_NAME + "(" + COLUMNS + ")" + " values (#{item.stockId}, #{item.exchangeId}, #{item.name}, #{item.listingDate} )")
     public void insertStockItem(@Param("item") StockItem item);
 
