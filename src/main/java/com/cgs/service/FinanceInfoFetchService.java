@@ -29,12 +29,12 @@ public class FinanceInfoFetchService {
     private String financeFetchUrl;
 
 
-    public void fetchFinanceInfo(){
+    public void fetchFinanceInfo() throws InterruptedException {
         List<StockItem> stockItems = stockItemDAO.queryAllStockList();
         if (CollectionUtils.isEmpty(stockItems)){
             return;
         }
-        List<FinanceInfo> infoList = new ArrayList<>();
+        financeInfoDAO.clearFinanceInfo();
         for (StockItem item : stockItems){
             String requestUrl = financeFetchUrl.replace("stockcode",item.getExchangeId().toUpperCase() + item.getStockId());
             String result= HttpRequestUtil.getRequestDirectly(requestUrl);
@@ -46,9 +46,10 @@ public class FinanceInfoFetchService {
                 continue;
             }
             List<FinanceInfo> infos = dtoList.stream().map(e-> e.convertToStockInfo(item.getStockId())).collect(Collectors.toList());
-            infoList.addAll(infos);
+            financeInfoDAO.batchInsertFinanceInfo(infos);
+            Thread.sleep(500);
+
         }
-        financeInfoDAO.clearFinanceInfo();
-        financeInfoDAO.batchInsertFinanceInfo(infoList);
+
     }
 }
