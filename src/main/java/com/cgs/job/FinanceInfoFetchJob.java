@@ -17,13 +17,13 @@ public class FinanceInfoFetchJob {
     @Autowired
     private FinanceInfoFetchService financeInfoFetchService;
 
-    @Scheduled(cron = "0 30 19 1/1 * ? ")
+    @Scheduled(cron = "0 30 15 1/1 * ?")
     public void fetchFinanceInfo(){
         log.info("start to fetch finance info");
         try {
             financeInfoFetchService.fetchFinanceInfo();
         }catch (Exception e){
-            log.error("");
+            log.error("error in fetchFinanceInfo:{}",e);
         }
         log.info("end to fetch finance info ");
     }
