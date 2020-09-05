@@ -8,6 +8,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +20,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -35,7 +39,30 @@ public class StockAchievementService {
         while (true){
             try {
                 String requestUrl = url.replace("pageNo",String.valueOf(startIndex));
-                String content = HttpRequestUtil.getRequestDirectly(requestUrl);
+
+                String osName =  System.getProperty("os.name");
+                if (StringUtils.isEmpty(osName)){
+                    return;
+                }
+                osName = osName.toLowerCase();
+                if (osName.contains("windows")){
+                    System.setProperty("webdriver.chrome.driver","C:Program Files (x86)//Google//Chrome//Application//chromedriver.exe");
+                }else if (osName.contains("linux") || osName.contains("ubuntu")){
+                    System.setProperty("webdriver.chrome.driver","/usr/bin/chromedriver");
+                }
+
+
+                log.info("os name :{}",osName);
+                ChromeOptions options = new ChromeOptions();
+                options.setHeadless(true);
+                options.addArguments("--no-sandbox");
+                options.addArguments("--disable-dev-shm-usage");
+                WebDriver webDriver = new ChromeDriver(options);
+                webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+
+                webDriver.get(requestUrl);
+                String content = webDriver.getPageSource();
                 if (StringUtils.isEmpty(content)){
                     break;
                 }
