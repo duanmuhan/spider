@@ -93,6 +93,9 @@ public class KItemCalculateService {
                         return Integer.valueOf(e.getDate()) > Integer.valueOf(latestDate);
                     }).collect(Collectors.toList());
                 }
+                if (CollectionUtils.isEmpty(tmpMonthItem)){
+                    continue;
+                }
                 KItem kItem = new KItem();
                 kItem.setOpenPrice(tmpMonthItem.get(0).getOpenPrice());
                 kItem.setClosePrice(tmpMonthItem.get(tmpMonthItem.size()-1).getClosePrice());

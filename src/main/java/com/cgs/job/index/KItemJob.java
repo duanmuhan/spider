@@ -34,11 +34,11 @@ public class KItemJob {
             log.info("start to calculateKItem");
             kItemCalculateService.calculateKItem();
             //calculateAverageService.calculateAverage();
-            log.info("start to fetchStockMoodIndexService");
-            stockMoodIndexFetchService.fetchStockMoodIndexService();
+
         }catch (Exception e){
             log.error("error while fetch fetchStockData:{} ",e);
         }
-
+        log.info("start to fetchStockMoodIndexService");
+        stockMoodIndexFetchService.fetchStockMoodIndexService();
     }
 }
