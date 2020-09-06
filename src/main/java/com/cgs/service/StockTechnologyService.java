@@ -87,9 +87,13 @@ public class StockTechnologyService {
                 if (StringUtils.isEmpty(content)){
                     continue;
                 }
+                log.info(content);
                 Document document = Jsoup.parse(content);
                 String text = document.text();
                 if (StringUtils.isEmpty(text)){
+                    continue;
+                }
+                if (ObjectUtils.isEmpty(JSON.parseObject(text).getJSONObject("data").getJSONObject("data"))){
                     continue;
                 }
                 JSONObject object = JSON.parseObject(text).getJSONObject("data").getJSONObject("data").getJSONObject("result");
