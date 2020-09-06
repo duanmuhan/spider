@@ -33,7 +33,7 @@ public class KItemJob {
             kItemFetchService.fetchKItem();
             log.info("start to calculateKItem");
             kItemCalculateService.calculateKItem();
-            calculateAverageService.calculateAverage();
+//            calculateAverageService.calculateAverage();
 
         }catch (Exception e){
             log.error("error while fetch fetchStockData:{} ",e);
