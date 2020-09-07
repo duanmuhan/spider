@@ -17,7 +17,7 @@ public class StockMoodIndexFetchJob {
     @Autowired
     private StockMoodIndexFetchService stockMoodIndexFetchService;
 
-    @Scheduled(cron = "0 30 08 * * ?")
+    @Scheduled(cron = "0 10 17 * * ?")
     public void fetchStockMoodIndex(){
         log.info("start to execute fetchStockMoodIndex");
         try {
