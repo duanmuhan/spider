@@ -74,7 +74,9 @@ public class StockMoodIndexFetchService {
             kItem.setStockId("000001-sh");
             kItems.add(kItem);
         }
+        log.info("kItem is :{}",JSON.toJSON(kItems));
         String date = kItemDAO.queryLatestDateOfKItem("000001-sh",1);
+        log.info("kItem date is :{}",date);
         if (!StringUtils.isEmpty(date)){
             kItems = kItems.stream().filter(e->{
                 return Integer.valueOf(e.getDate()) > Integer.valueOf(date);
