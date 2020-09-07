@@ -163,6 +163,7 @@ public class StockTechnologyService {
         if (!CollectionUtils.isEmpty(stockTechnologyScoreList)){
             stockTechnologyScoreDAO.batchInsertStockTechnologyScore(stockTechnologyScoreList);
         }
+        webDriver.quit();
     }
 
     private SimpleDateFormat getSimpleDateFormat(String datePattern){

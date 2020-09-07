@@ -34,33 +34,32 @@ public class StockAchievementService {
 
     public void fetchStockAchievement() throws InterruptedException {
         String url = "http://data.10jqka.com.cn/ajax/yjyg/date/2020-09-30/board/ALL/field/enddate/order/desc/page/pageNo/ajax/1/free/1/";
+
+        String osName =  System.getProperty("os.name");
+        if (StringUtils.isEmpty(osName)){
+            return;
+        }
+        osName = osName.toLowerCase();
+        if (osName.contains("windows")){
+            System.setProperty("webdriver.chrome.driver","C:Program Files (x86)//Google//Chrome//Application//chromedriver.exe");
+        }else if (osName.contains("linux") || osName.contains("ubuntu")){
+            System.setProperty("webdriver.chrome.driver","/usr/bin/chromedriver");
+        }
+
+
+        log.info("os name :{}",osName);
+        ChromeOptions options = new ChromeOptions();
+        options.setHeadless(true);
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        WebDriver webDriver = new ChromeDriver(options);
+        webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
         int startIndex = 1;
         List<StockAchievement> stockAchievements = new ArrayList<>();
         while (true){
             try {
                 String requestUrl = url.replace("pageNo",String.valueOf(startIndex));
-
-                String osName =  System.getProperty("os.name");
-                if (StringUtils.isEmpty(osName)){
-                    return;
-                }
-                osName = osName.toLowerCase();
-                if (osName.contains("windows")){
-                    System.setProperty("webdriver.chrome.driver","C:Program Files (x86)//Google//Chrome//Application//chromedriver.exe");
-                }else if (osName.contains("linux") || osName.contains("ubuntu")){
-                    System.setProperty("webdriver.chrome.driver","/usr/bin/chromedriver");
-                }
-
-
-                log.info("os name :{}",osName);
-                ChromeOptions options = new ChromeOptions();
-                options.setHeadless(true);
-                options.addArguments("--no-sandbox");
-                options.addArguments("--disable-dev-shm-usage");
-                WebDriver webDriver = new ChromeDriver(options);
-                webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
-
                 webDriver.get(requestUrl);
                 String content = webDriver.getPageSource();
                 if (StringUtils.isEmpty(content)){
@@ -98,6 +97,7 @@ public class StockAchievementService {
             startIndex = startIndex + 1;
             Thread.sleep(1000);
         }
+        webDriver.quit();
         if (!CollectionUtils.isEmpty(stockAchievements)){
             List<StockAchievement> stockAchievementList = stockAchievementDAO.batchQueryStockAchievementList();
             if (!CollectionUtils.isEmpty(stockAchievementList)){
@@ -110,6 +110,5 @@ public class StockAchievementService {
                 stockAchievementDAO.batchInsertStockAchievement(stockAchievements);
             }
         }
-
     }
 }
