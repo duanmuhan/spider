@@ -26,7 +26,7 @@ public class KItemJob {
     @Autowired
     private StockMoodIndexFetchService stockMoodIndexFetchService;
 
-    @Scheduled(cron = "0 45 16 * * ?")
+    @Scheduled(cron = "0 10 17 * * ?")
     public void fetchStockData(){
         try {
             log.info("start to fetch Stock KItem");
