@@ -87,7 +87,7 @@ public class StockHotSpotRankService {
             stockHotSpotDAO.batchInsertStockHotspotItem(stockHotspotList);
             Thread.sleep(1000);
         }
-
+        webDriver.quit();
     }
 
     private SimpleDateFormat getSimpleDateFormat(String datePattern){
