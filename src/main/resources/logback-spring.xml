@@ -12,10 +12,10 @@
     <jmxConfigurator />
 
     <!-- 定义日志文件 输出位置 -->
-    <property name="log_dir" value="/home/logs/spider" />
+    <property name="log_dir" value="/home/data/logs/spider" />
 
     <!-- 日志最大的历史 30天 -->
-    <property name="maxHistory" value="7" />
+    <property name="maxHistory" value="3" />
 
     <!-- ConsoleAppender 控制台输出日志 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
