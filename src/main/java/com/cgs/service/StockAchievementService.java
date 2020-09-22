@@ -66,6 +66,18 @@ public class StockAchievementService {
                     break;
                 }
                 Document document = Jsoup.parse(content);
+                if (ObjectUtils.isEmpty(document)){
+                    break;
+                }
+                Elements tbodyElements = document.getElementsByTag("tbody");
+                if (ObjectUtils.isEmpty(tbodyElements)){
+                    break;
+                }
+
+                Element tbodyElement = document.getElementsByTag("tbody").first();
+                if (ObjectUtils.isEmpty(tbodyElement)){
+                    break;
+                }
                 Elements trElements = document.getElementsByTag("tbody").first().getElementsByTag("tr");
                 if (ObjectUtils.isEmpty(trElements)){
                     break;
