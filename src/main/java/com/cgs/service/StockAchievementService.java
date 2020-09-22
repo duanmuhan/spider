@@ -62,6 +62,7 @@ public class StockAchievementService {
                 String requestUrl = url.replace("pageNo",String.valueOf(startIndex));
                 webDriver.get(requestUrl);
                 String content = webDriver.getPageSource();
+                log.info("StockAchievementService info is:{}",content);
                 if (StringUtils.isEmpty(content)){
                     break;
                 }
