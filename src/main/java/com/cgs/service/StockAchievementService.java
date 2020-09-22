@@ -78,7 +78,7 @@ public class StockAchievementService {
                 if (ObjectUtils.isEmpty(tbodyElement)){
                     break;
                 }
-                Elements trElements = document.getElementsByTag("tbody").first().getElementsByTag("tr");
+                Elements trElements = tbodyElement.getElementsByTag("tr");
                 if (ObjectUtils.isEmpty(trElements)){
                     break;
                 }
