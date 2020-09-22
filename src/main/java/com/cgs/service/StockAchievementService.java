@@ -116,7 +116,7 @@ public class StockAchievementService {
             if (!CollectionUtils.isEmpty(stockAchievementList)){
                 Map<String,StockAchievement> stockAchievementMap = stockAchievementList.stream().collect(Collectors.toMap(StockAchievement::getStockId,Function.identity(),
                         (value1, value2 )->{
-                            return value2;
+                            return value1;
                         }));
                 stockAchievements = stockAchievements.stream().filter(e->{
                     return !(stockAchievementMap.containsKey(e.getStockId()) && stockAchievementMap.get(e.getStockId()).getReleaseDate().equals(e.getReleaseDate()));
