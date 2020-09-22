@@ -114,7 +114,10 @@ public class StockAchievementService {
         if (!CollectionUtils.isEmpty(stockAchievements)){
             List<StockAchievement> stockAchievementList = stockAchievementDAO.batchQueryStockAchievementList();
             if (!CollectionUtils.isEmpty(stockAchievementList)){
-                Map<String,StockAchievement> stockAchievementMap = stockAchievementList.stream().collect(Collectors.toMap(StockAchievement::getStockId,Function.identity()));
+                Map<String,StockAchievement> stockAchievementMap = stockAchievementList.stream().collect(Collectors.toMap(StockAchievement::getStockId,Function.identity(),
+                        (value1, value2 )->{
+                            return value2;
+                        }));
                 stockAchievements = stockAchievements.stream().filter(e->{
                     return !(stockAchievementMap.containsKey(e.getStockId()) && stockAchievementMap.get(e.getStockId()).getReleaseDate().equals(e.getReleaseDate()));
                 }).collect(Collectors.toList());
